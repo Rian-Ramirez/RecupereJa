@@ -1,0 +1,83 @@
+﻿@model RecupereJa.ViewModels.TarefaViewModel
+
+@{
+    ViewData["Title"] = "Editar Tarefa";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-edit"></i> Editar Tarefa</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Titulo" class="form-label"></label>
+                        <input asp-for="Titulo" class="form-control" />
+                        <span asp-validation-for="Titulo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Descricao" class="form-label"></label>
+                        <textarea asp-for="Descricao" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Descricao" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Prioridade" class="form-label"></label>
+                        <select asp-for="Prioridade" class="form-select" asp-items="Html.GetEnumSelectList<PrioridadeEnum>()"></select>
+                        <span asp-validation-for="Prioridade" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="Concluida" class="form-check-input" />
+                        <label asp-for="Concluida" class="form-check-label"></label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Data de Criação</label>
+                                <input type="text" class="form-control" value="@Model.DataCriacao" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.DataConclusao))
+                            {
+                                <div class="mb-3">
+                                    <label class="form-label">Data de Conclusão</label>
+                                    <input type="text" class="form-control" value="@Model.DataConclusao" readonly />
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="alert alert-@Model.StatusCor">
+                        <i class="fas fa-@(Model.Concluida ? "check-circle" : "clock")"></i>
+                        Status atual: <strong>@Model.StatusTexto</strong>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Index" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
