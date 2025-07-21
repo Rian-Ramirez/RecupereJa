@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Home\Class.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="TESTE\" />
   </ItemGroup>
 
