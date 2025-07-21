@@ -1,10 +1,37 @@
 ﻿@{
-    ViewData["Title"] = "Login";
+	ViewData["Title"] = "Login";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Tela de login</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+	<h1 class="display-4">Tela de login</h1>
+	<p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
-<form></form>
-<label>teste de label</label>
+<form>
+	<label>teste de label</label>
+	<br>
+	<input placeholder="Email">
+	<input placeholder="Senha">
+
+</form>
+
+@model web_tarefas.ViewModels.LoginViewModel
+
+<div class="container">
+    <h2>Login</h2>
+
+    <form asp-action="Login" method="post">
+        <div class="form-group">
+            <label asp-for="Username"></label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+</div>
