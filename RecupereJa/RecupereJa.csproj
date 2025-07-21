@@ -10,4 +10,8 @@
     <Content Remove="Views\Home\Class.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+  </ItemGroup>
+
 </Project>
