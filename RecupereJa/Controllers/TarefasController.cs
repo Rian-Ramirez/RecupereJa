@@ -8,6 +8,7 @@ using RecupereJa.Models;
 //using RecupereJa.Repository;
 //using RecupereJa.Services;
 using RecupereJa.ViewModel;
+using RecupereJa.ViewModels;
 
 namespace RecupereJa.Controllers
 {
