@@ -1,3 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using RecupereJa.Repository;
+using RecupereJa.Services;
+
 namespace RecupereJa
 {
     public class Program
@@ -8,6 +13,27 @@ namespace RecupereJa
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                                                           .AddCookie(options =>
+                                                           {
+                                                               options.LoginPath = "/Usuario/Login";
+                                                               options.LogoutPath = "/Usuario/Logout";
+                                                           });
+
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+
+            // Configurar Entity Framework
+            builder.Services.AddDbContext<TarefaContext>(options => options.UseMySql
+            (builder.Configuration.GetConnectionString("DefaultConnection"),
+            ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+
+
+            builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
+
+            builder.Services.AddScoped<ITarefaService, TarefaService>();
+
 
             var app = builder.Build();
 
@@ -28,7 +54,7 @@ namespace RecupereJa
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Tarefas}/{action=Index}/{id?}");
 
             app.Run();
         }

@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 using RecupereJa.Enums;
 using RecupereJa.Filtros;
 using RecupereJa.Models;
 
-//using RecupereJa.Repository;
-//using RecupereJa.Services;
-using RecupereJa.ViewModel;
+using RecupereJa.Repository;
+using RecupereJa.Services;
 using RecupereJa.ViewModels;
 
 namespace RecupereJa.Controllers
@@ -83,7 +82,7 @@ namespace RecupereJa.Controllers
                 var tarefa = (Tarefa)viewModel;
 
                 _context.Add(tarefa);
-                await _context.SaveChangesAsync();
+                object value = await _context.SaveChangesAsync();
                 TempData["Sucesso"] = "Tarefa criada com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
