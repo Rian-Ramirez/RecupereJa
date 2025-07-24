@@ -4,12 +4,12 @@ using RecupereJa.Models;
 
 namespace RecupereJa.Repository
 {
-    public class ItemControler : DbContext
+    public class ItemContext : DbContext
     {
         public ItemContext(DbContextOptions<ItemContext> options)
             : base(options) { }
 
-        public DbSet<Item> Item { get; set; }
+        public DbSet<Item> Items { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

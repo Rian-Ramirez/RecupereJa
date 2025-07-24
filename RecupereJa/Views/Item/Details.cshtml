@@ -9,20 +9,17 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4><i class="fas fa-eye"></i> Detalhes do item</h4>
-                <span class="badge bg-@Model.PrioridadeCor fs-6">@Model.PrioridadeTexto</span>
+                <span class="badge bg-@(Model.Status ? "success" : "warning") fs-6">
+                    @(Model.Status ? "Entregue ao dono" : "Não entregue")
+                </span>
             </div>
+
             <div class="card-body">
                 <div class="row mb-4">
                     <div class="col-md-8">
-                        <h2 class="@(Model.Concluida ? "text-decoration-line-through text-muted" : "")">
+                        <h2 class="@(Model.Status ? "text-decoration-line-through text-muted" : "")">
                             @Model.Titulo
                         </h2>
-                    </div>
-                    <div class="col-md-4 text-end">
-                        <span class="badge bg-@Model.StatusCor fs-6">
-                            <i class="fas fa-@(Model.Concluida ? "check-circle" : "clock")"></i>
-                            @Model.StatusTexto
-                        </span>
                     </div>
                 </div>
 
@@ -30,7 +27,7 @@
                 {
                     <div class="mb-4">
                         <h5>Descrição:</h5>
-                        <p class="@(Model.Concluida ? "text-muted" : "")">@Model.Descricao</p>
+                        <p class="@(Model.Status ? "text-muted" : "")">@Model.Descricao</p>
                     </div>
                 }
 
@@ -39,31 +36,18 @@
                         <div class="card bg-light">
                             <div class="card-body text-center">
                                 <i class="fas fa-calendar-plus fa-2x text-primary mb-2"></i>
-                                <h6>Data de Criação</h6>
-                                <p class="mb-0">@Model.DataCriacao</p>
+                                <h6>Data em que foi encontrado</h6>
+                                <p class="mb-0">@Model.DataEncontrado</p>
                             </div>
                         </div>
                     </div>
-
-                    @if (!string.IsNullOrEmpty(Model.DataConclusao))
-                    {
-                        <div class="col-md-6">
-                            <div class="card bg-light">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-calendar-check fa-2x text-success mb-2"></i>
-                                    <h6>Data de Conclusão</h6>
-                                    <p class="mb-0">@Model.DataConclusao</p>
-                                </div>
-                            </div>
-                        </div>
-                    }
                 </div>
 
-                @if (Model.Concluida)
+                @if (Model.Status)
                 {
                     <div class="alert alert-success mt-4">
                         <i class="fas fa-check-circle"></i>
-                        <strong>Parabéns!</strong> Este item foi concluída com sucesso.
+                        <strong>Ótimo!</strong> Este item já foi devolvido ao dono.
                     </div>
                 }
             </div>
@@ -74,14 +58,12 @@
                         <i class="fas fa-arrow-left"></i> Voltar para Lista
                     </a>
 
-                    @if (!Model.Concluida)
-                    {
-                        <form asp-action="ToggleConcluida" asp-route-id="@Model.Id" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-success me-md-2">
-                                <i class="fas fa-check"></i> Marcar como Concluída
-                            </button>
-                        </form>
-                    }
+                    <form asp-action="ToggleConcluida" asp-route-id="@Model.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-@(Model.Status ? "warning" : "success") me-md-2">
+                            <i class="fas fa-sync-alt"></i>
+                            @(Model.Status ? "Marcar como não entregue" : "Marcar como entregue")
+                        </button>
+                    </form>
 
                     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-md-2">
                         <i class="fas fa-edit"></i> Editar

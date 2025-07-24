@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using RecupereJa.Enums;
 using RecupereJa.Filtros;
 using RecupereJa.Models;
 using RecupereJa.Repository;
@@ -44,19 +43,14 @@ namespace RecupereJa.Controllers
 
         public IActionResult Create()
         {
-            var viewModel = new ItemViewModel
-            {
-                Prioridade = PrioridadeEnum.Media,
-                Concluida = false
-            };
-            return View(viewModel);
+            return View(new ItemViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ItemViewModel viewModel)
         {
-            RemoverPropriedadesNaoValidas();
+            ModelState.Remove(nameof(ItemViewModel.TemDescricao));
 
             if (ModelState.IsValid)
             {
@@ -87,15 +81,13 @@ namespace RecupereJa.Controllers
         {
             if (id != viewModel.Id) return NotFound();
 
-            RemoverPropriedadesNaoValidas();
+            ModelState.Remove(nameof(ItemViewModel.TemDescricao));
 
             if (ModelState.IsValid)
             {
                 try
                 {
                     var item = (Item)viewModel;
-
-                    item.DataConclusao = item.Concluida ? item.DataConclusao ?? DateTime.Now : null;
 
                     _itemContext.Update(item);
                     await _itemContext.SaveChangesAsync();
@@ -146,10 +138,8 @@ namespace RecupereJa.Controllers
             var item = await _itemContext.Items.FindAsync(id);
             if (item == null) return NotFound();
 
-            item.Concluida = !item.Concluida;
-            item.DataConclusao = item.Concluida ? DateTime.Now : null;
-
-            _itemContext.Update(item);
+            // Trocar "Concluída" por "Status"
+            item.Status = !item.Status;
             await _itemContext.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -158,16 +148,6 @@ namespace RecupereJa.Controllers
         private bool ItemExists(int id)
         {
             return _itemContext.Items.Any(e => e.Id == id);
-        }
-
-        private void RemoverPropriedadesNaoValidas()
-        {
-            ModelState.Remove(nameof(ItemViewModel.PrioridadeTexto));
-            ModelState.Remove(nameof(ItemViewModel.PrioridadeCor));
-            ModelState.Remove(nameof(ItemViewModel.StatusTexto));
-            ModelState.Remove(nameof(ItemViewModel.StatusCor));
-            ModelState.Remove(nameof(ItemViewModel.TemDescricao));
-            ModelState.Remove(nameof(ItemViewModel.DataCriacao));
         }
     }
 }

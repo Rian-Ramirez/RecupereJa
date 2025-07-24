@@ -1,5 +1,4 @@
-﻿@using RecupereJa.Enums
-@model RecupereJa.ViewModels.ItemViewModel
+﻿@model RecupereJa.ViewModels.ItemViewModel
 
 @{
     ViewData["Title"] = "Novo item";
@@ -28,16 +27,17 @@
                         <span asp-validation-for="Descricao" class="text-danger"></span>
                     </div>
 
-@*                     <div class="mb-3">
-                        <label asp-for="Prioridade" class="form-label"></label>
-                        <option value="">Selecione a prioridade</option>
-                        <span asp-validation-for="Prioridade" class="text-danger"></span>
-                    </div> *@
+                    <div class="mb-3">
+                        <label asp-for="DataEncontrado" class="form-label"></label>
+                        <input asp-for="DataEncontrado" class="form-control" placeholder="dd/MM/yyyy HH:mm" />
+                        <span asp-validation-for="DataEncontrado" class="text-danger"></span>
+                    </div>
 
-@*                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i>
-                        A tarefa será criada com status <strong>Pendente</strong> e data de criação atual.
-                    </div> *@
+                    <div class="form-check mb-3">
+                        <input asp-for="Status" class="form-check-input" type="checkbox" />
+                        <label asp-for="Status" class="form-check-label"></label>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a asp-action="Index" class="btn btn-secondary me-md-2">
@@ -51,10 +51,3 @@
             </div>
         </div>
     </div>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
