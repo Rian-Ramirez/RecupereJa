@@ -3,29 +3,29 @@
 using RecupereJa.Models;
 namespace RecupereJa.Repository
 {
-    public class TarefaRepository(TarefaContext tarefaContext) : ITarefaRepository
+    public class ItemRepositorio(ItemContext itemContext) : IItemRepositorio
     {
-        private readonly TarefaContext _tarefaContext = tarefaContext;
+        private readonly ItemContext _itemContext = itemContext;
 
-        public void Atualizar(Tarefa entidade)
+        public void Atualizar(Item entidade)
         {
             throw new NotImplementedException();
         }
 
-        public Tarefa BuscarPorId(int id)
+        public Item BuscarPorId(int id)
         {
             throw new NotImplementedException();
         }
 
-        public List<Tarefa> BuscarTodos()
+        public List<Item> BuscarTodos()
         {
             throw new NotImplementedException();
         }
 
-        public int Criar(Tarefa entidade)
+        public int Criar(Item entidade)
         {
-            _tarefaContext.Add(entidade);
-            return _tarefaContext.SaveChanges();
+            _itemContext.Add(entidade);
+            return _itemContext.SaveChanges();
         }
 
 
@@ -34,9 +34,9 @@ namespace RecupereJa.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<List<Tarefa>> BuscarOrdenadoDataCriacaoDesc()
+        public async Task<List<Item>> BuscarOrdenadoDataCriacaoDesc()
         {
-            return await _tarefaContext.Tarefas
+            return await _itemContext.Item
                     .OrderByDescending(t => t.DataCriacao)
                     .ToListAsync();
         }

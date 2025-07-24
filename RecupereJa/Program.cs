@@ -25,14 +25,14 @@ namespace RecupereJa
             builder.Services.AddControllersWithViews();
 
             // Configurar Entity Framework
-            builder.Services.AddDbContext<TarefaContext>(options => options.UseMySql
+            builder.Services.AddDbContext<ItemContext>(options => options.UseMySql
             (builder.Configuration.GetConnectionString("DefaultConnection"),
             ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
 
-            builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
+            builder.Services.AddScoped<IItemRepositorio, ItemRepositorio>();
 
-            builder.Services.AddScoped<ITarefaService, TarefaService>();
+            builder.Services.AddScoped<IItemService, ItemService>();
 
 
             var app = builder.Build();
@@ -54,7 +54,7 @@ namespace RecupereJa
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Tarefas}/{action=Index}/{id?}");
+                pattern: "{controller=Item}/{action=Index}/{id?}");
 
             app.Run();
         }
