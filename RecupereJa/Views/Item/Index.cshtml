@@ -1,15 +1,15 @@
-﻿@model IEnumerable<RecupereJa.ViewModels.TarefaViewModel>
+﻿@model IEnumerable<RecupereJa.ViewModels.ItemViewModel>
 
 @{
-    ViewData["Title"] = "Gerenciador de Tarefas";
+    ViewData["Title"] = "Gerenciador de Itens";
 }
 
 <div class="row">
     <div class="col-md-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="fas fa-tasks"></i> Minhas Tarefas</h2>
+            <h2><i class="fas fa-boxes"></i> Meus itens</h2>
             <a asp-action="Create" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Nova Tarefa
+                <i class="fas fa-plus"></i> Novo item
             </a>
         </div>
 
@@ -27,34 +27,26 @@
                 @foreach (var item in Model)
                 {
                     <div class="col-md-6 col-lg-4 mb-3">
-                        <div class="card border-@item.StatusCor">
+                        <div class="card border-@(item.Status ? "success" : "warning")">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <small class="text-muted">
-                                    @item.DataCriacao
+                                    @item.DataEncontrado
                                 </small>
-                                <span class="badge bg-@item.PrioridadeCor">
-                                    @item.PrioridadeTexto
+                                <span class="badge bg-@(item.Status ? "success" : "warning")">
+                                    @(item.Status ? "Entregue" : "Não entregue")
                                 </span>
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title @(item.Concluida ? "text-decoration-line-through text-muted" : "")">
+                                <h5 class="card-title @(item.Status ? "text-decoration-line-through text-muted" : "")">
                                     @item.Titulo
                                 </h5>
+
                                 @if (item.TemDescricao)
                                 {
-                                    <p class="card-text @(item.Concluida ? "text-muted" : "")">
+                                    <p class="card-text @(item.Status ? "text-muted" : "")">
                                         @item.Descricao
                                     </p>
                                 }
-                                @if (item.Concluida && !string.IsNullOrEmpty(item.DataConclusao))
-                                {
-                                    <small class="text-success">
-                                        <i class="fas fa-check-circle"></i> Concluída em @item.DataConclusao
-                                    </small>
-                                }
-                                <div class="mt-2">
-                                    <span class="badge bg-@item.StatusCor">@item.StatusTexto</span>
-                                </div>
                             </div>
                             <div class="card-footer">
                                 <div class="btn-group w-100" role="group">
@@ -65,9 +57,9 @@
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <form asp-action="ToggleConcluida" asp-route-id="@item.Id" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-outline-@(item.Concluida ? "secondary" : "success") btn-sm"
-                                                title="@(item.Concluida ? "Marcar como pendente" : "Marcar como concluída")">
-                                            <i class="fas fa-@(item.Concluida ? "undo" : "check")"></i>
+                                        <button type="submit" class="btn btn-outline-@(item.Status ? "secondary" : "success") btn-sm"
+                                                title="@(item.Status ? "Marcar como não entregue" : "Marcar como entregue")">
+                                            <i class="fas fa-@(item.Status ? "undo" : "check")"></i>
                                         </button>
                                     </form>
                                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm" title="Excluir">
@@ -84,10 +76,10 @@
         {
             <div class="text-center py-5">
                 <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
-                <h4 class="text-muted">Nenhuma tarefa cadastrada</h4>
-                <p class="text-muted">Comece criando sua primeira tarefa!</p>
+                <h4 class="text-muted">Nenhum item cadastrado</h4>
+                <p class="text-muted">Comece criando seu primeiro item!</p>
                 <a asp-action="Create" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Criar Primeira Tarefa
+                    <i class="fas fa-plus"></i> Criar primeiro item
                 </a>
             </div>
         }

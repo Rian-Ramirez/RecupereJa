@@ -9,7 +9,7 @@ namespace RecupereJa.Filtros
         {
             if (context.HttpContext.User.Identity?.IsAuthenticated != true)
             {
-                context.Result = new RedirectToActionResult("Login", "Account", null);
+                context.Result = new RedirectToActionResult("Login", "Usuario", null);
             }
         }
     }
