@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using RecupereJa.Repositorio;
 using RecupereJa.Repository;
 using RecupereJa.Services;
 
@@ -30,11 +31,13 @@ namespace RecupereJa
             ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
 
+            builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+
             builder.Services.AddScoped<IItemRepositorio, ItemRepositorio>();
 
             builder.Services.AddScoped<IItemService, ItemService>();
 
-
+                
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
