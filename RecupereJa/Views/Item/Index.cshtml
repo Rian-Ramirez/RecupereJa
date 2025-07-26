@@ -1,0 +1,87 @@
+﻿@model IEnumerable<RecupereJa.ViewModels.ItemViewModel>
+
+@{
+    ViewData["Title"] = "Gerenciador de Itens";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-boxes"></i> Meus itens</h2>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Novo item
+            </a>
+        </div>
+
+        @if (TempData["Sucesso"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Sucesso"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (Model.Any())
+        {
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card border-@(item.Status ? "success" : "warning")">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    @item.DataEncontrado
+                                </small>
+                                <span class="badge bg-@(item.Status ? "success" : "warning")">
+                                    @(item.Status ? "Entregue" : "Não entregue")
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title @(item.Status ? "text-decoration-line-through text-muted" : "")">
+                                    @item.Titulo
+                                </h5>
+
+                                @if (item.TemDescricao)
+                                {
+                                    <p class="card-text @(item.Status ? "text-muted" : "")">
+                                        @item.Descricao
+                                    </p>
+                                }
+                            </div>
+                            <div class="card-footer">
+                                <div class="btn-group w-100" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm" title="Detalhes">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form asp-action="ToggleConcluida" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-@(item.Status ? "secondary" : "success") btn-sm"
+                                                title="@(item.Status ? "Marcar como não entregue" : "Marcar como entregue")">
+                                            <i class="fas fa-@(item.Status ? "undo" : "check")"></i>
+                                        </button>
+                                    </form>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Nenhum item cadastrado</h4>
+                <p class="text-muted">Comece criando seu primeiro item!</p>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Criar primeiro item
+                </a>
+            </div>
+        }
+    </div>
+</div>

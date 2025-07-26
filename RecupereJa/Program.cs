@@ -1,3 +1,9 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using RecupereJa.Repositorio;
+using RecupereJa.Repository;
+using RecupereJa.Services;
+
 namespace RecupereJa
 {
     public class Program
@@ -8,7 +14,30 @@ namespace RecupereJa
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                                                           .AddCookie(options =>
+                                                           {
+                                                               options.LoginPath = "/Usuario/Login";
+                                                               options.LogoutPath = "/Usuario/Logout";
+                                                           });
 
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+
+            // Configurar Entity Framework
+            builder.Services.AddDbContext<ItemContext>(options => options.UseMySql
+            (builder.Configuration.GetConnectionString("DefaultConnection"),
+            ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+
+
+            builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+
+            builder.Services.AddScoped<IItemRepositorio, ItemRepositorio>();
+
+            builder.Services.AddScoped<IItemService, ItemService>();
+
+                
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -24,11 +53,12 @@ namespace RecupereJa
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Item}/{action=Index}/{id?}");
 
             app.Run();
         }
