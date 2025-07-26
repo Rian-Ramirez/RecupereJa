@@ -2,78 +2,86 @@
 
 <style>
     body {
-        background-color: #808080; /* fundo cinza */
-        color: #b30000; /* vermelho escuro */
+        background-color: #808080;
+        color: #b30000;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
     }
 
     .login-container {
+        width: 100%;
         max-width: 400px;
-        margin: 80px auto;
         padding: 30px;
-        background-color: #4d4d4d; /* cinza escuro */
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(179, 0, 0, 0.4); /* sombra vermelho escuro */
+        background-color: #4d4d4d;
+        border-radius: 12px;
+        box-shadow: 0 0 25px rgba(179, 0, 0, 0.5);
     }
 
-        .login-container h2 {   
+        .login-container h2 {
             text-align: center;
-            color: #b30000; /* vermelho escuro */
-            margin-bottom: 30px;
+            color: #b30000;
+            margin-bottom: 25px;
         }
+
+    label {
+        color: #e6e6e6;
+        font-weight: 500;
+    }
 
     .form-control {
         background-color: #808080;
         border: 1px solid #b30000;
-        color: #b30000;
+        color: #fff;
     }
 
         .form-control:focus {
-            box-shadow: 0 0 5px #b30000;
-            border-color: #b30000;
-            background-color: #808080;
-            color: #b30000;
+            background-color: #999999;
+            border-color: #ff0000;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.6);
+            color: #fff;
         }
-
-    label {
-        color: #b30000;
-    }
 
     .btn-primary {
         background-color: #b30000;
         border: none;
         color: #fff;
         font-weight: bold;
-        transition: 0.3s;
+        padding: 10px;
+        border-radius: 6px;
+        transition: background-color 0.3s ease-in-out;
     }
 
         .btn-primary:hover {
             background-color: #800000;
-            color: #fff;
         }
 
     .text-danger {
-        color: #ff6666; /* um vermelho mais claro só para mensagens de erro */
+        color: #ff6666;
+        font-size: 0.9rem;
     }
 </style>
 
 <div class="login-container">
     <h2>Login</h2>
 
-    <form asp-action="Login" method="post">
-        <div class="form-group">
+    <form asp-action="Login" method="post" novalidate>
+        <div class="form-group mb-3">
             <label asp-for="Username"></label>
-            <input asp-for="Username" class="form-control" />
+            <input asp-for="Username" class="form-control" placeholder="Digite seu usuário" autocomplete="username" />
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
 
-        <div class="form-group mt-3">
+        <div class="form-group mb-4">
             <label asp-for="Password"></label>
-            <input asp-for="Password" class="form-control" type="password" />
+            <input asp-for="Password" class="form-control" placeholder="Digite sua senha" type="password" autocomplete="current-password" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
-        <div class="d-grid gap-2 mt-4">
+        <div class="d-grid">
             <button type="submit" class="btn btn-primary">Entrar</button>
         </div>
     </form>

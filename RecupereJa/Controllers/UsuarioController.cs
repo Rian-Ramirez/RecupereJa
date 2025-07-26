@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using RecupereJa.ViewModel;
+using RecupereJa.Models;
 
 namespace RecupereJa.Controllers
 {
@@ -26,6 +27,33 @@ namespace RecupereJa.Controllers
         {
             return View();
         }
+
+        public IActionResult Registrar()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(Usuario usuario)
+        {
+            if (ModelState.IsValid)
+            {
+                // Aqui você pode adicionar o usuário no banco, etc.
+                // Ex: db.Users.Add(user); db.SaveChanges();
+
+                ViewBag.Message = "Usuário registrado com sucesso!";
+                return RedirectToAction("Success");
+            }
+
+            return View(usuario);
+        }
+
+        public ActionResult Success()
+        {
+            return View();
+        }
+
 
         public IActionResult Index()
         {
