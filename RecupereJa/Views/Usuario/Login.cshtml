@@ -1,5 +1,9 @@
 ﻿@model RecupereJa.ViewModel.LoginViewModel
 
+@{
+    Layout = null;
+}
+
 <style>
     body {
         background-color: #808080;
@@ -71,7 +75,7 @@
     <form asp-action="Login" method="post" novalidate>
         <div class="form-group mb-3">
             <label asp-for="Username"></label>
-            <input asp-for="Username" class="form-control" placeholder="Digite seu usuário" autocomplete="username" />
+            <input asp-for="Username" class="form-control" placeholder="Digite seu email" autocomplete="E-mail" />
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
 

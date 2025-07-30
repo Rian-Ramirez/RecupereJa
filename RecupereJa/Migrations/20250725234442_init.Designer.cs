@@ -13,7 +13,7 @@ namespace RecupereJa.Migrations
 {
     [DbContext(typeof(ItemContext))]
     [Migration("20250725234442_init")]
-    partial class init
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
