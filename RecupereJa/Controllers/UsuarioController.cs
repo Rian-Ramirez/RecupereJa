@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using RecupereJa.ViewModel;
 using RecupereJa.Models;
+using RecupereJa.Repositorio;
 
 namespace RecupereJa.Controllers
 {
@@ -11,9 +12,26 @@ namespace RecupereJa.Controllers
     {
         private readonly ILogger<UsuarioController> _logger;
 
-        public UsuarioController(ILogger<UsuarioController> logger)
+        private readonly IUsuarioRepositorio _usuarioRepositorio;
+
+        public UsuarioController(ILogger<UsuarioController> logger, IUsuarioRepositorio usuarioRepositorio)
         {
             _logger = logger;
+            _usuarioRepositorio = usuarioRepositorio;
+        }
+
+        [HttpPost]
+
+        public ActionResult Registrar(Usuario usuario)
+        {
+            if (ModelState.IsValid)
+            {
+                _usuarioRepositorio.Criar(usuario);
+                TempData["Sucesso"] = "Usuário registrado com sucesso!";
+                return RedirectToAction("Login");
+            }
+
+            return View(usuario);
         }
 
         [HttpGet]
@@ -33,22 +51,6 @@ namespace RecupereJa.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Register(Usuario usuario)
-        {
-            if (ModelState.IsValid)
-            {
-                // Aqui você pode adicionar o usuário no banco, etc.
-                // Ex: db.Users.Add(user); db.SaveChanges();
-
-                ViewBag.Message = "Usuário registrado com sucesso!";
-                return RedirectToAction("Success");
-            }
-
-            return View(usuario);
-        }
-
         public ActionResult Success()
         {
             return View();
@@ -65,22 +67,25 @@ namespace RecupereJa.Controllers
             return View();
         }
 
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Validar credenciais (exemplo simples)
-                if (ValidateUser(model.Username, model.Password))
+                var user = _usuarioRepositorio.BuscarPorEmailSenha(model.Username!, model.Password!);
+                if (user != null)
                 {
-                    // Criar claims do usuário
-                    List<Claim>? claims = new()
-                        {
-                            new Claim(ClaimTypes.Name, model.Username),
-                            new Claim(ClaimTypes.Email, "usuario@email.com"),
-                            new Claim(ClaimTypes.Role, "Usuario"),
-                            new Claim("UserId", "123")
-                        };
+                    var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Nome),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Email == "adm@email.com" ? "adm" : "usuario"),
+                new Claim("UserId", user.Id.ToString())
+            };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -96,17 +101,12 @@ namespace RecupereJa.Controllers
             return View(model);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
-        }
-
-        private bool ValidateUser(string username, string password)
-        {
-            // Implementar uma lógica válida aqui
-            return username == "adm" && password == "123";
         }
     }
 }
