@@ -1,40 +1,31 @@
-﻿@model RecupereJa.ViewModel.UsuarioViewModel
+﻿@model RecupereJa.ViewModel.PerfilUsuarioViewModel
 
 <div class="profile-container">
     <div class="sidebar">
         <img src="@Model.PhotoUrl" class="profile-photo" alt="Profile Photo" />
-        <h2>@Model.Name</h2>
-        <h4>@Model.Position</h4>
-        <p>@Model.Location</p>
+        <h2>@Model.Nome</h2>
+        <p>@Model.Cidade</p>
         <p class="rating">⭐ @Model.Rating</p>
 
         <div class="contact-info">
-            <p>📞 <a href="tel:@Model.Phone">@Model.Phone</a></p>
+            <p>📞 <a href="tel:@Model.Telefone">@Model.Telefone</a></p>
             <p>📧 <a href="mailto:@Model.Email">@Model.Email</a></p>
-            <p>🌐 <a href="@Model.Website" target="_blank">@Model.Website</a></p>
-            <p>🏠 @Model.Address</p>
         </div>
     </div>
 
     <div class="main-content">
-        <h3>Work</h3>
-        <ul>
-            @foreach (var job in Model.Workplaces)
-            {
-                <li><strong>@job.Company</strong> - @job.Address</li>
-            }
-        </ul>
 
-        <h3>Skills</h3>
-        <ul class="skills">
-            @foreach (var skill in Model.Skills)
-            {
-                <li>@skill</li>
-            }
-        </ul>
 
         <h3>Basic Information</h3>
-        <p><strong>Birthday:</strong> @Model.Birthday.ToString("MMMM d, yyyy")</p>
+        <p>
+            <strong>Birthday:</strong>
+            @Model.Birthday.ToString("MMMM d, yyyy")
+        </p>
         <p><strong>Gender:</strong> @Model.Gender</p>
     </div>
 </div>
+
+@* 
+Corrigir essa parte, no Controller(Eu acho) e as entidades no model 
+Task de rápida cerca de 1 hora +/-
+*@
