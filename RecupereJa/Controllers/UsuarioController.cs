@@ -67,6 +67,10 @@ namespace RecupereJa.Controllers
             return View();
         }
 
+        public IActionResult Sac()
+        {
+            return View();
+        }
 
 
 
