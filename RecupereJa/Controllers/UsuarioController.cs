@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using RecupereJa.ViewModel;
 using RecupereJa.Models;
 using RecupereJa.Repositorio;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace RecupereJa.Controllers
 {
     public class UsuarioController : Controller
     {
+        //private readonly 
+
         private readonly ILogger<UsuarioController> _logger;
 
         private readonly IUsuarioRepositorio _usuarioRepositorio;
@@ -46,6 +49,7 @@ namespace RecupereJa.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Registrar()
         {
             return View();
@@ -64,8 +68,25 @@ namespace RecupereJa.Controllers
 
         public IActionResult Perfil()
         {
-            return View();
+            {
+                var perfil = new PerfilUsuarioViewModel
+                {
+                    Nome = "João da Silva",
+                    Email = "joao@email.com",
+                    FotoPerfilUrl = "/images/joao.jpg",
+                    Nascimento = new DateTime(1990, 7, 15),
+                    Genero = "Masculino",
+                    Cidade = "São Paulo",
+                    Telefone = "11999999999",
+                    Endereço = "Rua Exemplo, 123",
+                    Rating = 4.5,
+                    
+                };
+
+                return View(perfil);
+            }
         }
+
 
         public IActionResult Sac()
         {
