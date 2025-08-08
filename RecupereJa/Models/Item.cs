@@ -19,8 +19,8 @@ namespace RecupereJa.Models
         public string? Descricao {  get; set; }
 
 
-        [Url(ErrorMessage = "Insira uma URL válida.")]
-        public string? ImagemUrl { get; set; }
+        [Display(Name = "Profile Picture")]
+        public byte[] ImagemObjeto { get; set; }
 
 
         [Required(ErrorMessage = "A data é obrigatória.")]
