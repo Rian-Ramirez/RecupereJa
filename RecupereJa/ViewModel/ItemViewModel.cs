@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using RecupereJa.Models;
 
-namespace RecupereJa.ViewModels
+namespace RecupereJa.ViewModel
 {
     public class ItemViewModel
     {

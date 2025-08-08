@@ -1,5 +1,6 @@
 ﻿using RecupereJa.Models;
 using RecupereJa.Repository;
+using RecupereJa.ViewModel;
 
 namespace RecupereJa.Services
 {
@@ -22,5 +23,17 @@ namespace RecupereJa.Services
 
         public async Task<List<Item>> BuscarOrdenadoDataCriacaoDesc() =>
             await _itemRepositorio.BuscarOrdenadoDataCriacaoDesc();
+
+        public List<ItemViewModel> BuscarItemParaHome()
+        {
+            var itens = _itemRepositorio.BuscarItemParaHome();
+            return itens.Select(i => new ItemViewModel
+            {
+                Id = i.Id,
+                Titulo = i.Titulo,
+                Descricao = i.Descricao,
+            //    ImagemObjeto = i.ImagemObjeto
+            }).ToList();
+        }
     }
 }

@@ -1,14 +1,16 @@
-﻿using RecupereJa.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RecupereJa.Models;
 using RecupereJa.Repositorio;
 using RecupereJa.Repository;
+using RecupereJa.ViewModel;
 
 namespace RecupereJa.Repositorio
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
-        private readonly ItemContext _itemContext;
+        private readonly RecupereJaContext _itemContext;
 
-        public UsuarioRepositorio(ItemContext context)
+        public UsuarioRepositorio(RecupereJaContext context)
         {
             _itemContext = context;
         }
@@ -35,9 +37,9 @@ namespace RecupereJa.Repositorio
             return _itemContext.Usuarios.FirstOrDefault(u => u.Id == id)!;
         }
 
-        public Usuario BuscarPorEmailSenha(string email, string senha)
+        public async Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senha)
         {
-            return _itemContext.Usuarios.FirstOrDefault(u => u.Email == email && u.Senha == senha)!;
+            return await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha)!;
         }
 
         public void Deletar(int id)
@@ -48,6 +50,13 @@ namespace RecupereJa.Repositorio
                 _itemContext.Usuarios.Remove(usuario);
                 _itemContext.SaveChanges();
             }
+        }
+
+
+
+        public List<ItemViewModel> BuscarItemParaHome()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using RecupereJa.Repositorio;
 using RecupereJa.Repository;
@@ -21,12 +22,16 @@ namespace RecupereJa
                                                                options.LogoutPath = "/Usuario/Logout";
                                                            });
 
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 5 * 1024 * 1024; // 5MB
+            });
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
             // Configurar Entity Framework
-            builder.Services.AddDbContext<ItemContext>(options => options.UseMySql
+            builder.Services.AddDbContext<RecupereJaContext>(options => options.UseMySql
             (builder.Configuration.GetConnectionString("DefaultConnection"),
             ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 

@@ -11,7 +11,7 @@ using RecupereJa.Repository;
 
 namespace RecupereJa.Migrations
 {
-    [DbContext(typeof(ItemContext))]
+    [DbContext(typeof(RecupereJaContext))]
     [Migration("20250725234442_init")]
     partial class Init
     {

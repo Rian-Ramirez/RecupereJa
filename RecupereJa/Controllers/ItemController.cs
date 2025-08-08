@@ -5,7 +5,7 @@ using RecupereJa.Filtros;
 using RecupereJa.Models;
 using RecupereJa.Repository;
 using RecupereJa.Services;
-using RecupereJa.ViewModels;
+using RecupereJa.ViewModel;
 
 namespace RecupereJa.Controllers
 {
@@ -13,9 +13,9 @@ namespace RecupereJa.Controllers
     public class ItemController : Controller
     {
         private readonly IItemService _itemService;
-        private readonly ItemContext _itemContext;
+        private readonly RecupereJaContext _itemContext;
 
-        public ItemController(IItemService itemService, ItemContext itemContext)
+        public ItemController(IItemService itemService, RecupereJaContext itemContext)
         {
             _itemService = itemService;
             _itemContext = itemContext;

@@ -1,4 +1,6 @@
-﻿namespace RecupereJa.Repository
+﻿using RecupereJa.ViewModel;
+
+namespace RecupereJa.Repository
 {
     public interface ICRUD<T>
     {
@@ -11,5 +13,6 @@
         public T BuscarPorId(int id);
 
         public void Deletar(int id);
+        List<ItemViewModel> BuscarItemParaHome();
     }
 }

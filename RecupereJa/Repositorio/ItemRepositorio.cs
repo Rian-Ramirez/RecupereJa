@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RecupereJa.Models;
+using RecupereJa.ViewModel;
 
 namespace RecupereJa.Repository
 {
-    public class ItemRepositorio(ItemContext itemContext) : IItemRepositorio
+    public class ItemRepositorio(RecupereJaContext itemContext) : IItemRepositorio
     {
-        private readonly ItemContext _itemContext = itemContext;
+        private readonly RecupereJaContext _itemContext = itemContext;
 
         public int Criar(Item entidade)
         {
@@ -45,6 +46,16 @@ namespace RecupereJa.Repository
                 _itemContext.Items.Remove(item);
                 _itemContext.SaveChanges();
             }
+        }
+
+        public List<Item> BuscarItemParaHome()
+        {
+            return _itemContext.Items.OrderByDescending(i => i.Id).Take(10).ToList();
+        }
+
+        List<ItemViewModel> ICRUD<Item>.BuscarItemParaHome()
+        {
+            throw new NotImplementedException();
         }
     }
 }

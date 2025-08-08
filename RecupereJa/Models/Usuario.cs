@@ -22,5 +22,7 @@ namespace RecupereJa.Models
         [StringLength(30, MinimumLength = 8, ErrorMessage = "A senha deve ter de 8 a 30 caracteres.")]
         public string Senha { get; set; }
         
+
+        public byte[] FotoUsuario { get; set; }
     }
 }

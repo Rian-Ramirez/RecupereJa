@@ -18,9 +18,9 @@ namespace RecupereJa.Models
         [StringLength(500, ErrorMessage = "A descrição deve ter no máximo 500 caracteres.")]
         public string? Descricao {  get; set; }
 
-
-        [Url(ErrorMessage = "Insira uma URL válida.")]
-        public string? ImagemUrl { get; set; }
+        
+        [Display(Name = "Profile Picture")]
+        public byte[] ImagemObjeto { get; set; }
 
 
         [Required(ErrorMessage = "A data é obrigatória.")]

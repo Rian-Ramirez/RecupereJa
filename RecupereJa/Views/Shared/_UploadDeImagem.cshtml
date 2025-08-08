@@ -1,0 +1,87 @@
+﻿@model UploadDeImagem
+<script src="~/js/index.js"></script>
+
+<div class="image-upload-container" data-image-id="@Model.ImageId">
+    <div class="image-display">
+        @if (Model.HasImage.Value)
+        {
+            <img src="/api/image/@Model.ImageId" alt="Imagem" class="uploaded-image" />
+        }
+        else
+        {
+            <div class="no-image">📷 Nenhuma imagem</div>
+        }
+    </div>
+
+    <div class="image-controls">
+        <input type="file" id="imageFile_@Model.ImageId" accept="image/*" style="display: none;" />
+        <button type="button" onclick="selectImage('@Model.ImageId')" class="btn btn-primary">
+            Selecionar Imagem
+        </button>
+
+        @if (Model.HasImage.Value)
+        {
+            <button type="button" onclick="deleteImage('@Model.ImageId')" class="btn btn-danger">
+                Remover
+            </button>
+        }
+    </div>
+
+    <div id="status_@Model.ImageId" class="upload-status"></div>
+</div>
+
+<style>
+    .image-upload-container {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 300px;
+        text-align: center;
+    }
+
+    .image-display {
+        margin-bottom: 15px;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border-radius: 5px;
+    }
+
+    .uploaded-image {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 5px;
+    }
+
+    .no-image {
+        color: #6c757d;
+        font-size: 24px;
+    }
+
+    .image-controls button {
+        margin: 0 5px;
+    }
+
+    .upload-status {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+</style>
+
+<script>
+
+
+    // Event listener para upload
+    document.addEventListener('DOMContentLoaded', function() {
+    @foreach (var imageId in new[] { Model.ImageId })
+    {
+        <text>
+                    document.getElementById('imageFile_@imageId').addEventListener('change', function(e) {
+                        uploadImage('@imageId', e.target.files[0])
+                    });
+        </text>
+    }
+    });
+</script>

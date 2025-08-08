@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecupereJa.Models;
+using RecupereJa.Services;
 
 namespace RecupereJa.Controllers
 {
@@ -17,7 +18,8 @@ namespace RecupereJa.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var itens = _itemService.BuscarItemParaHome();
+            return View(itens);
         }
 
         public IActionResult Teste()
@@ -35,5 +37,15 @@ namespace RecupereJa.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        private readonly IItemService _itemService;
+
+        public HomeController(IItemService itemService)
+        {
+            _itemService = itemService;
+        }
+
+
     }
 }

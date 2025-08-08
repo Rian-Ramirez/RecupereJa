@@ -10,7 +10,7 @@ using RecupereJa.Repository;
 
 namespace RecupereJa.Migrations
 {
-    [DbContext(typeof(ItemContext))]
+    [DbContext(typeof(RecupereJaContext))]
     partial class ItemContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

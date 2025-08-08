@@ -4,9 +4,9 @@ using RecupereJa.Models;
 
 namespace RecupereJa.Repository
 {
-    public class ItemContext : DbContext
+    public class RecupereJaContext : DbContext
     {
-        public ItemContext(DbContextOptions<ItemContext> options)
+        public RecupereJaContext(DbContextOptions<RecupereJaContext> options)
             : base(options) { }
 
         public DbSet<Item> Items { get; set; }
