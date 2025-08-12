@@ -18,7 +18,11 @@ namespace RecupereJa.Models
         [StringLength(500, ErrorMessage = "A descrição deve ter no máximo 500 caracteres.")]
         public string? Descricao {  get; set; }
 
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 03f885db24cc1eb56f10f1ade9406a9b93b2097a
         [Display(Name = "Profile Picture")]
         public byte[] ImagemObjeto { get; set; }
 

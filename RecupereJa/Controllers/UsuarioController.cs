@@ -94,6 +94,7 @@ namespace RecupereJa.Controllers
         }
 
 
+<<<<<<< HEAD
         [HttpPost]
         public IActionResult AlterarImagem(IFormFile formFile)
         {
@@ -101,6 +102,8 @@ namespace RecupereJa.Controllers
         }
 
 
+=======
+>>>>>>> 03f885db24cc1eb56f10f1ade9406a9b93b2097a
 
 
 
