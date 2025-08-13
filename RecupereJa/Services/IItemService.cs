@@ -6,8 +6,8 @@ namespace RecupereJa.Services
 {
     public interface IItemService : ICRUD<Item>
     {
-        public Task<List<Item>> BuscarOrdenadoDataCriacaoDesc();
+        public Task<List<Item>> BuscarOrdenadoDataCriacaoDescAsync();
 
-        public List<ItemViewModel> BuscarItemParaHome();
+        public Task<List<ItemViewModel>> BuscarItemParaHomeAsync();
     }
 }
