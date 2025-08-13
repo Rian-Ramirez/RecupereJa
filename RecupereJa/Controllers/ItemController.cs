@@ -23,7 +23,7 @@ namespace RecupereJa.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var items = await _itemService.BuscarOrdenadoDataCriacaoDesc();
+            var items = await _itemService.BuscarOrdenadoDataCriacaoDescAsync();
             var itemViewModel = items.Select(ItemViewModel.FromItem).ToList();
 
             return View(itemViewModel);

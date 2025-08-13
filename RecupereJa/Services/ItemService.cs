@@ -11,22 +11,27 @@ namespace RecupereJa.Services
         public ItemService(IItemRepositorio itemRepositorio) =>
             _itemRepositorio = itemRepositorio;
 
-        public void Atualizar(Item entidade) => _itemRepositorio.Atualizar(entidade);
 
-        public Item BuscarPorId(int id) => _itemRepositorio.BuscarPorId(id);
-
-        public List<Item> BuscarTodos() => _itemRepositorio.BuscarTodos();
-
-        public int Criar(Item entidade) => _itemRepositorio.Criar(entidade);
-
-        public void Deletar(int id) => _itemRepositorio.Deletar(id);
-
-        public async Task<List<Item>> BuscarOrdenadoDataCriacaoDesc() =>
-            await _itemRepositorio.BuscarOrdenadoDataCriacaoDesc();
-
-        public List<ItemViewModel> BuscarItemParaHome()
+        public async Task<Item>BuscarPorIdAsync(int id)
         {
-            var itens = _itemRepositorio.BuscarItemParaHome();
+            return await _itemRepositorio.BuscarPorIdAsync(id);
+        }
+
+        public async Task<List<Item>> BuscarTodosAsync() => 
+            await _itemRepositorio.BuscarTodosAsync();
+
+        public async Task<int> CriarAsync(Item entidade) => 
+            await _itemRepositorio.CriarAsync(entidade);
+
+        public async Task<bool> DeletarAsync(int id) =>
+            await _itemRepositorio.DeletarAsync(id);
+
+        public async Task<List<Item>> BuscarOrdenadoDataCriacaoDescAsync() =>
+            await _itemRepositorio.BuscarOrdenadoDataCriacaoDescAsync();
+
+        public async Task<List<ItemViewModel>> BuscarItemParaHomeAsync()
+        {
+            var itens = await _itemRepositorio.BuscarItemParaHomeAsync();
             return itens.Select(i => new ItemViewModel
             {
                 Id = i.Id,
@@ -35,5 +40,28 @@ namespace RecupereJa.Services
             //    ImagemObjeto = i.ImagemObjeto
             }).ToList();
         }
+
+
+
+        //Não entendi os métodos abaixo | Colocar lógica no outros métodos faltantes
+        //public async Task<AtualizarAsync>(Item entidade)
+        //{
+        //    return await _itemRepositorio.AtualizarAsync(entidade);
+        //}
+        public Task AtualizarAsync(Item entidade)
+        {
+            return _itemRepositorio.AtualizarAsync(entidade);
+        }
+
+        public Task<List<Item>> BuscarOrdenadoDataCriacaoDesc()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ItemViewModel>> BuscarItemParaHome()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

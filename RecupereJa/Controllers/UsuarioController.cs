@@ -29,7 +29,7 @@ namespace RecupereJa.Controllers
         {
             if (ModelState.IsValid)
             {
-                _usuarioRepositorio.Criar(usuario);
+                _usuarioRepositorio.CriarAsync(usuario);
                 TempData["Sucesso"] = "Usuário registrado com sucesso!";
                 return RedirectToAction("Login");
             }
@@ -93,17 +93,11 @@ namespace RecupereJa.Controllers
             return View(perfil);
         }
 
-
-<<<<<<< HEAD
         [HttpPost]
         public IActionResult AlterarImagem(IFormFile formFile)
         {
             return View();
         }
-
-
-=======
->>>>>>> 03f885db24cc1eb56f10f1ade9406a9b93b2097a
 
 
 
@@ -121,7 +115,7 @@ namespace RecupereJa.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _usuarioRepositorio.BuscarPorEmailSenha(model.Username!, model.Password);
+                var user = await _usuarioRepositorio.BuscarPorEmailSenhaAsync(model.Username!, model.Password);
                 if (user != null)
                 {
                     var claims = new List<Claim>

@@ -1,12 +1,11 @@
 ﻿using RecupereJa.Models;
 
-
 namespace RecupereJa.Repository
 {
     public interface IItemRepositorio : ICRUD<Item>
     {
-        public Task<List<Item>> BuscarOrdenadoDataCriacaoDesc();
+        public Task<List<Item>> BuscarOrdenadoDataCriacaoDescAsync();
 
-        List<Item> BuscarItemParaHome();
+        public Task<List<Item>> BuscarItemParaHomeAsync();
     }
 }

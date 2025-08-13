@@ -15,48 +15,56 @@ namespace RecupereJa.Repositorio
             _itemContext = context;
         }
 
-        public int Criar(Usuario entidade)
+        public async Task<int> CriarAsync(Usuario entidade)
         {
             _itemContext.Usuarios.Add(entidade);
-            return _itemContext.SaveChanges();
+            return await _itemContext.SaveChangesAsync();
         }
 
-        public void Atualizar(Usuario entidade)
+        public async Task AtualizarAsync(Usuario entidade)
         {
             _itemContext.Usuarios.Update(entidade);
-            _itemContext.SaveChanges();
+            await _itemContext.SaveChangesAsync();
         }
 
-        public List<Usuario> BuscarTodos()
+        public async Task<List<Usuario>> BuscarTodosAsync()
         {
-            return _itemContext.Usuarios.ToList();
+            return await _itemContext.Usuarios.ToListAsync();
         }
 
-        public Usuario BuscarPorId(int id)
-        {
-            return _itemContext.Usuarios.FirstOrDefault(u => u.Id == id)!;
-        }
 
         public async Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senha)
         {
             return await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha)!;
         }
 
-        public void Deletar(int id)
+        public async Task<bool> DeletarAsync(int id)
         {
-            var usuario = _itemContext.Usuarios.FirstOrDefault(u => u.Id == id);
+            var usuario = await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
             if (usuario != null)
             {
                 _itemContext.Usuarios.Remove(usuario);
-                _itemContext.SaveChanges();
+                await _itemContext.SaveChangesAsync();
+                return true;
             }
+
+            return false;
         }
 
-
-
-        public List<ItemViewModel> BuscarItemParaHome()
+        public async Task<Usuario> BuscarPorIdAsync(int id)
+        {
+            return await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Id == id)!;
+        }
+        public async Task<List<ItemViewModel>> BuscarItemParaHomeAsync()
         {
             throw new NotImplementedException();
         }
+
+        Task ICRUD<Usuario>.AtualizarAsync(Usuario entidade)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 }

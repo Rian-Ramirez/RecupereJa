@@ -8,10 +8,10 @@ namespace RecupereJa.Repository
     {
         private readonly RecupereJaContext _itemContext = itemContext;
 
-        public int Criar(Item entidade)
+        public async Task<int> CriarAsync(Item entidade)
         {
             _itemContext.Items.Add(entidade);
-            return _itemContext.SaveChanges();
+            return await _itemContext.SaveChangesAsync();
         }
 
         public async Task<List<Item>> BuscarOrdenadoDataCriacaoDesc()
@@ -22,38 +22,44 @@ namespace RecupereJa.Repository
         }
 
         // Implementações opcionais se você usar:
-        public Item BuscarPorId(int id)
+        public async Task<Item> BuscarPorIdAsync(int id)
         {
-            return _itemContext.Items.FirstOrDefault(i => i.Id == id)!;
+            return (await _itemContext.Items.FirstOrDefaultAsync(i => i.Id == id))!;
+            //return await _itemContext.Items.FirstOrDefaultAsync(i => i.Id == id)!;
         }
 
-        public List<Item> BuscarTodos()
+        public async Task<List<Item>> BuscarTodosAsync()
         {
-            return _itemContext.Items.ToList();
+            return await _itemContext.Items.ToListAsync();
         }
 
-        public void Atualizar(Item entidade)
+        public async Task AtualizarAsync(Item entidade)
         {
             _itemContext.Items.Update(entidade);
-            _itemContext.SaveChanges();
+            await _itemContext.SaveChangesAsync();
         }
 
-        public void Deletar(int id)
+        public async Task<bool> DeletarAsync(int id)
         {
-            var item = _itemContext.Items.FirstOrDefault(i => i.Id == id);
+            var item = await _itemContext.Items.FirstOrDefaultAsync(i => i.Id == id);
             if (item != null)
             {
                 _itemContext.Items.Remove(item);
-                _itemContext.SaveChanges();
+                await _itemContext.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
 
-        public List<Item> BuscarItemParaHome()
+        public async Task<List<Item>> BuscarItemParaHomeAsync() => 
+            await _itemContext.Items.OrderByDescending(i => i.Id).Take(10).ToListAsync();
+
+        Task<List<ItemViewModel>> ICRUD<Item>.BuscarItemParaHomeAsync()
         {
-            return _itemContext.Items.OrderByDescending(i => i.Id).Take(10).ToList();
+            throw new NotImplementedException();
         }
 
-        List<ItemViewModel> ICRUD<Item>.BuscarItemParaHome()
+        public Task<List<Item>> BuscarOrdenadoDataCriacaoDescAsync()
         {
             throw new NotImplementedException();
         }
