@@ -1,5 +1,6 @@
 ﻿using RecupereJa.Models;
 using RecupereJa.Repositorio;
+using RecupereJa.Repository;
 using RecupereJa.ViewModel;
 
 namespace RecupereJa.Services
@@ -12,12 +13,12 @@ namespace RecupereJa.Services
             _usuarioRepositorio = usuarioRepositorio;
         }
 
-        public void Atualizar(Usuario entidade)
+        public async Task AtualizarAsync(Usuario entidade)
         {
-            _usuarioRepositorio.Atualizar(entidade);
+           await _usuarioRepositorio.AtualizarAsync(entidade);
         }
 
-        public List<ItemViewModel> BuscarItemParaHome()
+        public List<ItemViewModel> BuscarItemParaHomeAsync()
         {
             throw new NotImplementedException();
         }
@@ -27,22 +28,25 @@ namespace RecupereJa.Services
           return await _usuarioRepositorio.BuscarPorEmailSenhaAsync(email, senha);
         }
 
-        public Usuario BuscarPorId(int id)
+        public Task<Usuario> BuscarPorIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public List<Usuario> BuscarTodos()
+        public Task<List<Usuario>> BuscarTodosAsync()
         {
             throw new NotImplementedException();
         }
 
-        public int Criar(Usuario entidade)
+        public Task<int> CriarAsync(Usuario entidade)
         {
             throw new NotImplementedException();
         }
 
-        public void Deletar(int id)
+        public async Task<bool> DeletarAsync(int id)
+           => await _usuarioRepositorio.DeletarAsync(id);
+
+        Task<List<ItemViewModel>> ICRUD<Usuario>.BuscarItemParaHomeAsync()
         {
             throw new NotImplementedException();
         }

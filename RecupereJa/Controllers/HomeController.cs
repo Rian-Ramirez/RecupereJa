@@ -18,7 +18,7 @@ namespace RecupereJa.Controllers
 
         public IActionResult Index()
         {
-            var itens = _itemService.BuscarItemParaHome();
+            var itens = _itemService.BuscarItemParaHomeAsync();
             return View(itens);
         }
 

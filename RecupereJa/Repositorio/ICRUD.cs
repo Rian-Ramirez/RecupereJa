@@ -1,18 +1,20 @@
-﻿using RecupereJa.ViewModel;
+﻿using System;
+using RecupereJa.ViewModel;
 
 namespace RecupereJa.Repository
 {
     public interface ICRUD<T>
     {
-        public int Criar(T entidade);
+        Task<int>CriarAsync(T entidade);
 
-        public void Atualizar(T entidade);
+        Task AtualizarAsync(T entidade);
 
-        public List<T> BuscarTodos();
+        Task<List<T>> BuscarTodosAsync();
 
-        public T BuscarPorId(int id);
+        Task<T> BuscarPorIdAsync(int id);
 
-        public void Deletar(int id);
-        List<ItemViewModel> BuscarItemParaHome();
+        Task<bool> DeletarAsync(int id);
+
+        Task<List<ItemViewModel>> BuscarItemParaHomeAsync();
     }
 }

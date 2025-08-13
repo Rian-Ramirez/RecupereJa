@@ -18,9 +18,9 @@ namespace RecupereJa.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetImage(int id)
+        public async Task<IActionResult> GetImage(int id)
         {
-            Usuario? usuario  =  _usuarioService.BuscarPorId(id);
+            Usuario? usuario = await _usuarioService.BuscarPorIdAsync(id);
 
             if (usuario is null)
                 return NotFound();
@@ -42,7 +42,7 @@ namespace RecupereJa.Controllers
             if (model.ImageFile.Length > 5 * 1024 * 1024) // 5MB
                 return BadRequest("Arquivo muito grande");
 
-            Usuario? usuario = _usuarioService.BuscarPorId(1);
+            Usuario? usuario = await _usuarioService.BuscarPorIdAsync(1);
             if (usuario is null)
                 return Ok(new { success = false });
 
@@ -52,19 +52,24 @@ namespace RecupereJa.Controllers
 
             usuario.FotoUsuario = memoryStream.ToArray();
 
-            _usuarioService.Atualizar(usuario);
+            await _usuarioService.AtualizarAsync(usuario);
 
 
 
             return Ok(new { success = true, fileName = "" });
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteImage(int id)
-        {
-            bool deuCerto =  _usuarioService.Deletar(id);
 
-            return NotFound();
+        //Não entendi o erro 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id, IUsuarioService _usuarioService)
+        {
+            bool deuCerto = await _usuarioService.DeletarAsync(id);
+            
+            if (!deuCerto)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }

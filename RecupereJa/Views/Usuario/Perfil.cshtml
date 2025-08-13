@@ -1,7 +1,7 @@
 ﻿@model RecupereJa.ViewModel.PerfilUsuarioViewModel
 
 <form asp-action="Perfil" asp-controller="Usuario" method="post" enctype="multipart/form-data">
-<<<<<<< HEAD
+	<<<<<<< HEAD
 	<div class="profile-container row">
 
 		<!-- Sidebar de visualização -->
@@ -99,7 +99,7 @@
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div> *@
 
-<<<<<<< HEAD
+			<<<<<<< HEAD
 			<div class="form-group">
 				<label asp-for="Telefone"></label>
 				<input asp-for="Telefone" class="form-control" />
@@ -147,18 +147,15 @@
 	}
 </script>
 =======
-            <div class="form-group">
-                <label asp-for="Telefone"></label>
-                <input asp-for="Telefone" class="form-control" />
-                <span asp-validation-for="Telefone" class="text-danger"></span>
-            </div>
+<form>
+	<div class="form-group">
+		<label asp-for="Telefone"></label>
+		<input asp-for="Telefone" class="form-control" />
+		<span asp-validation-for="Telefone" class="text-danger"></span>
+	</div>
 
-            <button type="submit" class="btn btn-primary">Salvar</button>
-        </div>
-    </div>
-</form>
-
->>>>>>> 03f885db24cc1eb56f10f1ade9406a9b93b2097a
+	<button type="submit" class="btn btn-primary">Salvar</button>
+</form>>
 
 @* 
 Corrigir essa parte, no Controller(Eu acho) e as entidades no model 

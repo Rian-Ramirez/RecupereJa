@@ -7,15 +7,5 @@ namespace RecupereJa.Repositorio
     {
 
         public Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senha);
-        //public Usuario? BuscarPorEmailSenha(string email, string senhaDigitada)
-        //{
-        //    var usuario = BuscarPorEmailSenha(email);
-        //    if (usuario != null && BCrypt.Net.BCrypt.Verify(senhaDigitada, usuario.Senha))
-        //    {
-        //        return usuario;
-        //    }
-
-        //    return null;
-        //}
     }
 }
