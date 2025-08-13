@@ -1,166 +1,203 @@
 ﻿@model RecupereJa.ViewModel.PerfilUsuarioViewModel
 
-<form asp-action="Perfil" asp-controller="Usuario" method="post" enctype="multipart/form-data">
-<<<<<<< HEAD
-	<div class="profile-container row">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil - Recupere Já</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-		<!-- Sidebar de visualização -->
-		<div class="col-md-4 sidebar">
-			<div class="text-center">
-				@if (Model.FotoPerfilUrl != null && Model.FotoPerfilUrl.Length > 0)
-				{
-					<img id="FotoDePerfil" src="data:image/*;base64,@(Convert.ToBase64String(Model.FotoPerfilUrl))" class="profile-photo" alt="Profile Photo" />
-				}
-				else
-				{
-					<img id="FotoDePerfil" src="@Model.FotoPerfilUrl" class="profile-photo" alt="Profile Photo" />
-				}
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+        }
 
-				<input type="file"
-					   accept=".png,.jpg,.jpeg,.gif,.tif"
-					   name="FotoDePerfil"
-					   class="form-control"
-					   style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
-					   onchange="AlterarImagem()" />
-			</div>
+        /* Fundo degradê com blur */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom right, #d0eaff, #0077cc);
+            filter: blur(10px);
+            z-index: -1;
+        }
 
-			<h2>@Model.Nome</h2>
-			<p>@Model.Genero</p>
-			<p>@Model.Cidade</p>
-			<p class="rating">⭐ @Model.Rating</p>
-			<p>@Model.DataNascimentoFormatada</p>
+        .wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
 
-			<div class="contact-info">
-				<p>Telefone: <a href="tel:@Model.Telefone">@Model.Telefone</a></p>
-				<p>E-mail: <a href="mailto:@Model.Email">@Model.Email</a></p>
-			</div>
-		</div>
+        .container {
+            background-color: white;
+            padding: 30px 25px;
+            border-radius: 12px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
 
-		<!-- Campos de edição -->
-		<div class="col-md-8">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        header {
+            background-color: white;
+            color: #0066cc;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
 
-			<div class="form-group">
-				<label asp-for="Nome"></label>
-				<input asp-for="Nome" class="form-control" />
-				<span asp-validation-for="Nome" class="text-danger"></span>
-			</div>
+            header h2 {
+                margin: 0;
+                font-size: 18px;
+            }
 
-			@*             <div class="form-group">
-=======
-    <div class="profile-container row">
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #0066cc;
+            margin-bottom: 10px;
+        }
 
-        <!-- Sidebar de visualização -->
-        <div class="col-md-4 sidebar">
-            <div class="text-center">
-                @if (Model.FotoPerfilUrl != null && Model.FotoPerfilUrl.Length > 0)
-                {
-                    <img id="FotoDePerfil" src="data:image/*;base64,@(Convert.ToBase64String(Model.FotoPerfilUrl))" class="profile-photo" alt="Profile Photo" />
+        .profile-info p {
+            margin: 8px 0;
+            font-size: 1em;
+            text-align: left;
+        }
+
+        .styled-button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+            .styled-button:hover {
+                border-color: #0066cc;
+                background-color: #f0f8ff;
+            }
+
+        .edit-fields {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+            .edit-fields input {
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 1em;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+        /* Campo de upload customizado */
+        .file-input-wrapper {
+            position: relative;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+            .file-input-wrapper input[type="file"] {
+                display: none;
+            }
+
+            .file-input-wrapper span {
+                flex: 1;
+                padding: 8px;
+                color: #666;
+            }
+
+            .file-input-wrapper button {
+                background-color: #0066cc;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                font-size: 1.2em;
+                cursor: pointer;
+            }
+
+                .file-input-wrapper button:hover {
+                    background-color: #004d99;
                 }
-                else
-                {
-                    <img id="FotoDePerfil" src="@Model.FotoPerfilUrl" class="profile-photo" alt="Profile Photo" />
-                }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="wrapper">
+        <div class="container">
+            <header>
+                <h2><b>Meu Perfil</b></h2>
+            </header>
 
-                <input type="file"
-                       accept=".png,.jpg,.jpeg,.gif,.tif"
-                       name="FotoDePerfil"
-                       class="form-control"
-                       style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
-                       onchange="document.getElementById('FotoDePerfil').src = window.URL.createObjectURL(this.files[0])" />
+            <!-- Foto de perfil -->
+            <img src="assets/steve.jpg" alt="Foto de Perfil" class="profile-pic">
+
+            <!-- Informações -->
+            <div class="profile-info">
+                <p><strong>Nome Completo:</strong> João Silva</p>
+                <p><strong>Nome de Usuário:</strong> joaosilva</p>
+                <p><strong>Telefone:</strong> (11) 98765-4321</p>
+                <p><strong>Email:</strong> joaosilva@gmail.com</p>
+                <p><strong>Localização:</strong> São Paulo, SP</p>
             </div>
 
-            <h2>@Model.Nome</h2>
-            <p>@Model.Genero</p>
-            <p>@Model.Cidade</p>
-            <p class="rating">⭐ @Model.Rating</p>
-            <p>@Model.DataNascimentoFormatada</p>
+            <!-- Botão para editar -->
+            <button class="styled-button" onclick="toggleEdit()">Editar Perfil</button>
 
-            <div class="contact-info">
-                <p>Telefone: <a href="tel:@Model.Telefone">@Model.Telefone</a></p>
-                <p>E-mail: <a href="mailto:@Model.Email">@Model.Email</a></p>
+            <!-- Campos para edição -->
+            <div class="edit-fields" id="editSection">
+
+                <!-- Campo de foto customizado -->
+                <div class="file-input-wrapper">
+                    <span>Escolher nova foto...</span>
+                    <input type="file" id="fotoPerfil" accept="image/*" onchange="updateFileName()">
+                    <button type="button" onclick="document.getElementById('fotoPerfil').click()">+</button>
+                </div>
+
+                <input type="text" placeholder="Nome Completo">
+                <input type="text" placeholder="Nome de Usuário">
+                <input type="tel" placeholder="(XX) XXXXX-XXXX">
+                <input type="text" placeholder="exemplo@exemplo.com">
+                <input type="text" placeholder="Cidade, Estado">
+
+                <button class="styled-button">Salvar Alterações</button>
             </div>
-        </div>
-
-        <!-- Campos de edição -->
-        <div class="col-md-8">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Nome"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-
-@*             <div class="form-group">
->>>>>>> 03f885db24cc1eb56f10f1ade9406a9b93b2097a
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div> *@
-
-<<<<<<< HEAD
-			<div class="form-group">
-				<label asp-for="Telefone"></label>
-				<input asp-for="Telefone" class="form-control" />
-				<span asp-validation-for="Telefone" class="text-danger"></span>
-			</div>
-
-			<button type="submit" class="btn btn-primary">Salvar</button>
-		</div>
-	</div>
-</form>
-
-<script>
-
-	function AlterarImagem (){
-			const imagem = document.getElementsByName('FotoDePerfil')[0].files[0];
-
-		document.getElementById('FotoDePerfil').src = window.URL.createObjectURL(imagem)
-
-
-
-		// Cria um FormData para enviar a imagem e o ID
-		const formData = new FormData();
-		formData.append('id', '34');            // Adiciona o ID
-		formData.append('imagem', imagem);    // Adiciona a imagem
-
-		// Realiza o fetch para o endpoint
-		fetch('./AlterarImagem', {
-			method: 'POST',                // Envio de dados via POST
-			body: formData,                // Envia o FormData com os dados
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Erro ao enviar a imagem');
-			}
-			return response.json();  // Supondo que o backend retorne um JSON
-		})
-		.then(data => {
-			console.log('Imagem alterada com sucesso:', data);
-			// Aqui você pode manipular a resposta de sucesso
-		})
-		.catch(error => {
-			console.error('Erro:', error);
-			// Aqui você pode tratar os erros
-		});
-	}
-</script>
-=======
-            <div class="form-group">
-                <label asp-for="Telefone"></label>
-                <input asp-for="Telefone" class="form-control" />
-                <span asp-validation-for="Telefone" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
     </div>
-</form>
 
->>>>>>> 03f885db24cc1eb56f10f1ade9406a9b93b2097a
+    <script>
+        function toggleEdit() {
+          document.getElementById("editSection").style.display = "block";
+        }
 
-@* 
-Corrigir essa parte, no Controller(Eu acho) e as entidades no model 
-Task de rápida cerca de 1 hora +/-
-*@
+        function updateFileName() {
+          const fileInput = document.getElementById("fotoPerfil");
+          const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "Escolher nova foto...";
+          document.querySelector(".file-input-wrapper span").textContent = fileName;
+        }
+    </script>
+</body>
+</html>
