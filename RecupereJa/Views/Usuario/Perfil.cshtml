@@ -1,7 +1,7 @@
 ﻿@model RecupereJa.ViewModel.PerfilUsuarioViewModel
 
 <form asp-action="Perfil" asp-controller="Usuario" method="post" enctype="multipart/form-data">
-	<<<<<<< HEAD
+
 	<div class="profile-container row">
 
 		<!-- Sidebar de visualização -->
@@ -46,60 +46,6 @@
 				<span asp-validation-for="Nome" class="text-danger"></span>
 			</div>
 
-			@*             <div class="form-group">
-=======
-    <div class="profile-container row">
-
-        <!-- Sidebar de visualização -->
-        <div class="col-md-4 sidebar">
-            <div class="text-center">
-                @if (Model.FotoPerfilUrl != null && Model.FotoPerfilUrl.Length > 0)
-                {
-                    <img id="FotoDePerfil" src="data:image/*;base64,@(Convert.ToBase64String(Model.FotoPerfilUrl))" class="profile-photo" alt="Profile Photo" />
-                }
-                else
-                {
-                    <img id="FotoDePerfil" src="@Model.FotoPerfilUrl" class="profile-photo" alt="Profile Photo" />
-                }
-
-                <input type="file"
-                       accept=".png,.jpg,.jpeg,.gif,.tif"
-                       name="FotoDePerfil"
-                       class="form-control"
-                       style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
-                       onchange="document.getElementById('FotoDePerfil').src = window.URL.createObjectURL(this.files[0])" />
-            </div>
-
-            <h2>@Model.Nome</h2>
-            <p>@Model.Genero</p>
-            <p>@Model.Cidade</p>
-            <p class="rating">⭐ @Model.Rating</p>
-            <p>@Model.DataNascimentoFormatada</p>
-
-            <div class="contact-info">
-                <p>Telefone: <a href="tel:@Model.Telefone">@Model.Telefone</a></p>
-                <p>E-mail: <a href="mailto:@Model.Email">@Model.Email</a></p>
-            </div>
-        </div>
-
-        <!-- Campos de edição -->
-        <div class="col-md-8">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Nome"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-
-@*             <div class="form-group">
->>>>>>> 03f885db24cc1eb56f10f1ade9406a9b93b2097a
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div> *@
-
-			<<<<<<< HEAD
 			<div class="form-group">
 				<label asp-for="Telefone"></label>
 				<input asp-for="Telefone" class="form-control" />
@@ -146,7 +92,6 @@
 		});
 	}
 </script>
-=======
 <form>
 	<div class="form-group">
 		<label asp-for="Telefone"></label>
