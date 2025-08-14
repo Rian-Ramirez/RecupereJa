@@ -67,21 +67,30 @@ namespace RecupereJa.Controllers
         }
 
 
-        public IActionResult Perfil()
+        public async Task<IActionResult> Perfil()
         {
-            var caminhoImagem = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/shaq.jpg");
-            byte[] bytesImagem = null;
+            var usuarioId = int.Parse(User.FindFirst("UsuárioId")!.Value);
 
-            if (System.IO.File.Exists(caminhoImagem))
+            var usuario = await _usuarioRepositorio.BuscarPorIdAsync(usuarioId);
+            if (usuario == null)
+                return NotFound();
+
+            byte[] fotoBytes = usuario.FotoUsuario;
+            if (fotoBytes == null || fotoBytes.Length == 0)
             {
-                bytesImagem = System.IO.File.ReadAllBytes(caminhoImagem);
+                var caminhoImagem = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/shaq.jpg");
+                if (System.IO.File.Exists(caminhoImagem))
+                {
+                    fotoBytes = System.IO.File.ReadAllBytes(caminhoImagem);
+                }
             }
 
             var perfil = new PerfilUsuarioViewModel
             {
-                Nome = "João da Silva",
-                Email = "joao@email.com",
-                FotoPerfilUrl = bytesImagem,
+                Id = usuario.Id,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                FotoPerfilUrl = fotoBytes,
                 Nascimento = new DateTime(1990, 7, 15),
                 Genero = "Masculino",
                 Cidade = "São Paulo",
@@ -93,13 +102,28 @@ namespace RecupereJa.Controllers
             return View(perfil);
         }
 
+
         [HttpPost]
-        public IActionResult AlterarImagem(IFormFile formFile)
+        public async Task<IActionResult> AlterarImagem(int usuarioId, IFormFile formFile)
         {
-            return View();
+            if (formFile == null || formFile.Length == 0)
+                return RedirectToAction("Perfil");
+
+            var usuario = await _usuarioRepositorio.BuscarPorIdAsync(usuarioId);
+            if (usuario == null)
+                return NotFound();
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(memoryStream);
+                usuario.FotoUsuario = memoryStream.ToArray();
+            }
+
+            await _usuarioRepositorio.AtualizarAsync(usuario);
+
+            TempData["Sucesso"] = "Imagem alterada com sucesso!";
+            return RedirectToAction("Perfil");
         }
-
-
 
 
         public IActionResult Sac()
@@ -120,6 +144,7 @@ namespace RecupereJa.Controllers
                 {
                     var claims = new List<Claim>
             {
+                new Claim("UserId", user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Nome),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Email == "adm@email.com" ? "adm" : "usuario"),

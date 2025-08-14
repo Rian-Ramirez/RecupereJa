@@ -28,8 +28,8 @@ namespace RecupereJa.Controllers
             return File(usuario.FotoUsuario, "image/jpeg");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UploadImage([FromForm] UploadDeImagem model)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> UploadImage(int id, [FromForm] UploadDeImagem model)
         {
             if (model.ImageFile == null || model.ImageFile.Length == 0)
                 return BadRequest("Nenhum arquivo enviado");
@@ -42,7 +42,7 @@ namespace RecupereJa.Controllers
             if (model.ImageFile.Length > 5 * 1024 * 1024) // 5MB
                 return BadRequest("Arquivo muito grande");
 
-            Usuario? usuario = await _usuarioService.BuscarPorIdAsync(1);
+            Usuario? usuario = await _usuarioService.BuscarPorIdAsync(id);
             if (usuario is null)
                 return Ok(new { success = false });
 
@@ -53,9 +53,6 @@ namespace RecupereJa.Controllers
             usuario.FotoUsuario = memoryStream.ToArray();
 
             await _usuarioService.AtualizarAsync(usuario);
-
-
-
             return Ok(new { success = true, fileName = "" });
         }
 

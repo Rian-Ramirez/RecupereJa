@@ -11,6 +11,7 @@ namespace RecupereJa.Repository
 
         public DbSet<Item> Items { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<UploadDeImagem> UploadDeImagems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

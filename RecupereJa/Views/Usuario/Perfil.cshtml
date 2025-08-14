@@ -2,59 +2,66 @@
 
 <form asp-action="Perfil" asp-controller="Usuario" method="post" enctype="multipart/form-data">
 
-	<div class="profile-container row">
+<div class="profile-container row">
 
-		<!-- Sidebar de visualização -->
-		<div class="col-md-4 sidebar">
-			<div class="text-center">
-				@if (Model.FotoPerfilUrl != null && Model.FotoPerfilUrl.Length > 0)
-				{
-					<img id="FotoDePerfil" src="data:image/*;base64,@(Convert.ToBase64String(Model.FotoPerfilUrl))" class="profile-photo" alt="Profile Photo" />
-				}
-				else
-				{
-					<img id="FotoDePerfil" src="@Model.FotoPerfilUrl" class="profile-photo" alt="Profile Photo" />
-				}
+    <!-- Sidebar de visualização -->
+    <div class="col-md-4 sidebar">
+        <div class="text-center">
+            @if (Model.FotoPerfilUrl != null && Model.FotoPerfilUrl.Length > 0)
+            {
+                <img id="FotoDePerfil" src="data:image/*;base64,@(Convert.ToBase64String(Model.FotoPerfilUrl))" class="profile-photo" alt="Profile Photo" />
+            }
+            else
+            {
+                <img id="FotoDePerfil" src="@Model.FotoPerfilUrl" class="profile-photo" alt="Profile Photo" />
+            }
 
-				<input type="file"
-					   accept=".png,.jpg,.jpeg,.gif,.tif"
-					   name="FotoDePerfil"
-					   class="form-control"
-					   style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
-					   onchange="AlterarImagem()" />
-			</div>
+            <!-- Novo formulário de upload -->
+            <form asp-action="AlterarImagem" asp-controller="Usuario" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="usuarioId" value="@Model.Id" />
+                <div>
+                    <label for="formFile">Alterar foto de perfil:</label>
+                    <input type="file" id="formFile" name="formFile"
+                           accept=".png,.jpg,.jpeg,.gif,.tif"
+                           class="form-control"
+                           style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;" />
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
 
-			<h2>@Model.Nome</h2>
-			<p>@Model.Genero</p>
-			<p>@Model.Cidade</p>
-			<p class="rating">⭐ @Model.Rating</p>
-			<p>@Model.DataNascimentoFormatada</p>
+        <h2>@Model.Nome</h2>
+        <p>@Model.Genero</p>
+        <p>@Model.Cidade</p>
+        <p class="rating">⭐ @Model.Rating</p>
+        <p>@Model.DataNascimentoFormatada</p>
 
-			<div class="contact-info">
-				<p>Telefone: <a href="tel:@Model.Telefone">@Model.Telefone</a></p>
-				<p>E-mail: <a href="mailto:@Model.Email">@Model.Email</a></p>
-			</div>
-		</div>
+        <div class="contact-info">
+            <p>Telefone: <a href="tel:@Model.Telefone">@Model.Telefone</a></p>
+            <p>E-mail: <a href="mailto:@Model.Email">@Model.Email</a></p>
+        </div>
+    </div>
 
-		<!-- Campos de edição -->
-		<div class="col-md-8">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <!-- Campos de edição -->
+    <div class="col-md-8">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-			<div class="form-group">
-				<label asp-for="Nome"></label>
-				<input asp-for="Nome" class="form-control" />
-				<span asp-validation-for="Nome" class="text-danger"></span>
-			</div>
+        <div class="form-group">
+            <label asp-for="Nome"></label>
+            <input asp-for="Nome" class="form-control" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
 
-			<div class="form-group">
-				<label asp-for="Telefone"></label>
-				<input asp-for="Telefone" class="form-control" />
-				<span asp-validation-for="Telefone" class="text-danger"></span>
-			</div>
+        <div class="form-group">
+            <label asp-for="Telefone"></label>
+            <input asp-for="Telefone" class="form-control" />
+            <span asp-validation-for="Telefone" class="text-danger"></span>
+        </div>
 
-			<button type="submit" class="btn btn-primary">Salvar</button>
-		</div>
-	</div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+</div>
+
 </form>
 
 <script>
