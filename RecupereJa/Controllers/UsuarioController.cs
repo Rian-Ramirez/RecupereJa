@@ -5,16 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using RecupereJa.ViewModel;
 using RecupereJa.Models;
 using RecupereJa.Repositorio;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace RecupereJa.Controllers
 {
     public class UsuarioController : Controller
     {
-        //private readonly 
-
         private readonly ILogger<UsuarioController> _logger;
-
         private readonly IUsuarioRepositorio _usuarioRepositorio;
 
         public UsuarioController(ILogger<UsuarioController> logger, IUsuarioRepositorio usuarioRepositorio)
@@ -24,16 +20,14 @@ namespace RecupereJa.Controllers
         }
 
         [HttpPost]
-
-        public ActionResult Registrar(Usuario usuario)
+        public async Task<IActionResult> Registrar(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                _usuarioRepositorio.CriarAsync(usuario);
+                await _usuarioRepositorio.CriarAsync(usuario);
                 TempData["Sucesso"] = "Usuário registrado com sucesso!";
                 return RedirectToAction("Login");
             }
-
             return View(usuario);
         }
 
@@ -41,6 +35,37 @@ namespace RecupereJa.Controllers
         public IActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _usuarioRepositorio.BuscarPorIdentificadorSenhaAsync(model.Identificador, model.Password!);
+
+                if (user != null)
+                {
+                    var claims = new List<Claim>
+                    {
+                        new Claim("UsuarioId", user.Id.ToString()),
+                        new Claim(ClaimTypes.Name, user.Nome),
+                        new Claim(ClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.Role, user.Email == "adm@email.com" ? "adm" : "usuario")
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError("", "Credenciais inválidas");
+            }
+
+            return View(model);
         }
 
         [HttpGet]
@@ -60,16 +85,18 @@ namespace RecupereJa.Controllers
             return View();
         }
 
-
         public IActionResult Index()
         {
             return View();
         }
 
-
         public async Task<IActionResult> Perfil()
         {
-            var usuarioId = int.Parse(User.FindFirst("UsuárioId")!.Value);
+            var usuarioIdClaim = User.FindFirst("UsuarioId");
+            if (usuarioIdClaim == null)
+                return Unauthorized();
+
+            var usuarioId = int.Parse(usuarioIdClaim.Value);
 
             var usuario = await _usuarioRepositorio.BuscarPorIdAsync(usuarioId);
             if (usuario == null)
@@ -102,7 +129,6 @@ namespace RecupereJa.Controllers
             return View(perfil);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> AlterarImagem(int usuarioId, IFormFile formFile)
         {
@@ -125,46 +151,10 @@ namespace RecupereJa.Controllers
             return RedirectToAction("Perfil");
         }
 
-
         public IActionResult Sac()
         {
             return View();
         }
-
-
-
-
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _usuarioRepositorio.BuscarPorEmailSenhaAsync(model.Username!, model.Password);
-                if (user != null)
-                {
-                    var claims = new List<Claim>
-            {
-                new Claim("UserId", user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Nome),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Email == "adm@email.com" ? "adm" : "usuario"),
-                new Claim("UserId", user.Id.ToString())
-            };
-
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-
-                    return RedirectToAction("Index", "Home");
-                }
-
-                ModelState.AddModelError("", "Credenciais inválidas");
-            }
-
-            return View(model);
-        }
-
 
         [HttpPost]
         public async Task<IActionResult> Logout()

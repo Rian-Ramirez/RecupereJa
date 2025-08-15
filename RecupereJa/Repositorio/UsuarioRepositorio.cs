@@ -32,10 +32,16 @@ namespace RecupereJa.Repositorio
             return await _itemContext.Usuarios.ToListAsync();
         }
 
+        public async Task<Usuario?> BuscarPorIdentificadorSenhaAsync(string identificador, string senha)
+        {
+            return await _itemContext.Usuarios.FirstOrDefaultAsync(u =>
+            (u.Email == identificador || u.Nome == identificador) && u.Senha == senha);
+        }
 
         public async Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senha)
         {
-            return await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha)!;
+            return await _itemContext.Usuarios
+                .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
         }
 
         public async Task<bool> DeletarAsync(int id)
@@ -65,6 +71,14 @@ namespace RecupereJa.Repositorio
             throw new NotImplementedException();
         }
 
+        public Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senha)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Task<bool> DeletarAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

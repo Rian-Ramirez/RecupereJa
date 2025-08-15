@@ -107,15 +107,19 @@
                 <h2><b>Login</b></h2>
             </header>
 
-            <form>
+            <<form asp-controller="Login" asp-action="Index" method="post">>
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="exemplo@exemplo.com" required>
+                <input asp-for="Identificador " name="identificador" placeholder="Nome de usuário ou E-mail" required>
 
                 <label for="senha">Senha:</label>
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
 
                 <button type="submit">Entrar</button>
             </form>
+            @if (ViewBag.Mensagem != null)
+            {   
+                <p style="color:red">@ViewBag.Mensagem</p>
+            }
         </div>
     </div>
 </body>
