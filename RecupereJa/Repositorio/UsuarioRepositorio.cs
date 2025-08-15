@@ -70,15 +70,5 @@ namespace RecupereJa.Repositorio
         {
             throw new NotImplementedException();
         }
-
-        public Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senha)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeletarAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
