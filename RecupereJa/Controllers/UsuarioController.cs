@@ -19,17 +19,6 @@ namespace RecupereJa.Controllers
             _usuarioRepositorio = usuarioRepositorio;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Registrar(Usuario usuario)
-        {
-            if (ModelState.IsValid)
-            {
-                await _usuarioRepositorio.CriarAsync(usuario);
-                TempData["Sucesso"] = "Usuário registrado com sucesso!";
-                return RedirectToAction("Login");
-            }
-            return View(usuario);
-        }
 
         [HttpGet]
         public IActionResult Login()
@@ -72,6 +61,18 @@ namespace RecupereJa.Controllers
         public IActionResult Proibidao()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Registrar(Usuario usuario)
+        {
+            if (ModelState.IsValid)
+            {
+                await _usuarioRepositorio.CriarAsync(usuario);
+                TempData["Sucesso"] = "Usuário registrado com sucesso!";
+                return RedirectToAction("Login");
+            }
+            return View(usuario);
         }
 
         [HttpGet]
