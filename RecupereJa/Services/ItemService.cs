@@ -53,6 +53,12 @@ namespace RecupereJa.Services
             return _itemRepositorio.AtualizarAsync(entidade);
         }
 
+        //public async Task AtualizarAsync(Item entidade)
+        //{
+        //    _itemContext.Items.Update(entidade);
+        //    await _itemContext.SaveChangesAsync();
+        //}
+
         public Task<List<Item>> BuscarOrdenadoDataCriacaoDesc()
         {
             throw new NotImplementedException();

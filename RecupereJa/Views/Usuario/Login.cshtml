@@ -9,6 +9,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - Recupere Já</title>
+
+    <!-- Google Fonts (opcional) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap (caso vá usar de fato os estilos do Bootstrap) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         * {
             box-sizing: border-box;
@@ -21,7 +28,6 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        /* Fundo degradê com blur */
         .background {
             position: fixed;
             top: 0;
@@ -53,16 +59,14 @@
         header {
             background-color: white;
             color: #0066cc;
-            padding: 10px;
             text-align: center;
-            border-radius: 8px;
-            font-size: 18px;
             margin-bottom: 25px;
         }
 
             header h2 {
                 margin: 0;
-                font-size: 18px;
+                font-size: 24px;
+                font-weight: bold;
             }
 
         label {
@@ -77,67 +81,72 @@
             border-radius: 5px;
             font-size: 1em;
             width: 100%;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         button {
             padding: 10px;
-            background-color: #ffffff;
-            color: #0066cc;
+            background-color: #0066cc;
+            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1em;
-            width: 50%;
+            width: 100%;
             transition: background-color 0.3s;
-            display: block;
-            margin: 20px auto 0 auto;
         }
 
             button:hover {
-                background-color: #005f73;
+                background-color: #00509e;
             }
+
+        .text-danger {
+            font-size: 0.9em;
+        }
+
+        .alert {
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="background"></div>
+
     <div class="wrapper">
         <div class="container">
             <header>
-                <h2><b>Login</b></h2>
+                <h2>Login</h2>
             </header>
 
-            <<form asp-controller="Home" asp-action="Index" method="post">>
-                <label for="email">Email:</label>
-                <input asp-for="Identificador " name="identificador" placeholder="Nome de usuário ou E-mail" required>
+            <form asp-action="Login" method="post" novalidate>
+                <div class="mb-3">
+                    <label asp-for="Identificador"></label>
+                    <input asp-for="Identificador" class="form-control" placeholder="Digite seu nome de usuário ou e-mail" autocomplete="email" />
+                    <span asp-validation-for="Identificador" class="text-danger"></span>
+                </div>
 
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                <div class="mb-3">
+                    <label asp-for="Senha"></label>
+                    <input asp-for="Senha" class="form-control" placeholder="Digite sua senha" type="password" autocomplete="current-password" />
+                    <span asp-validation-for="Senha" class="text-danger"></span>
+                </div>
 
-                <button type="submit">Entrar</button>
+                <button type="submit" class="btn btn-primary">Entrar</button>
             </form>
+
             @if (ViewBag.Mensagem != null)
-            {   
-                <p style="color:red">@ViewBag.Mensagem</p>
+            {
+                <div class="alert alert-danger text-center" role="alert">
+                    @ViewBag.Mensagem
+                </div>
             }
         </div>
     </div>
+
+    <!-- Scripts de validação (se estiver usando validação com unobtrusive JS) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
 </body>
 </html>
-
-
-@* <form asp-action="Login" method="post" novalidate>
-    <div class="form-group mb-3">
-        <label asp-for="Username"></label>
-        <input asp-for="Username" class="form-control" placeholder="Digite seu email" autocomplete="E-mail" />
-        <span asp-validation-for="Username" class="text-danger"></span>
-    </div>
-    <div class="form-group mb-4">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" placeholder="Digite sua senha" type="password" autocomplete="current-password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div class="d-grid">
-        <button type="submit" class="btn btn-primary">Entrar</button>
-</form>
-</div> *@
