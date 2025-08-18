@@ -21,7 +21,10 @@ namespace RecupereJa.Models
         [Required(ErrorMessage = "A senha é obrigatória.")]
         [StringLength(30, MinimumLength = 8, ErrorMessage = "A senha deve ter de 8 a 30 caracteres.")]
         public string Senha { get; set; }
-        
+
+        [Required(ErrorMessage = "O campo telefone é obrigatório.")]
+        [RegularExpression(@"^\(\d{2}\) \d{5}-\d{4}$", ErrorMessage = "O telefone deve estar no formato (XX) XXXXX-XXXX.")]
+        public string Telefone { get; set; }
 
         public byte[] FotoUsuario { get; set; }
     }

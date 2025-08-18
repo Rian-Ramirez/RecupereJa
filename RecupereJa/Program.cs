@@ -42,6 +42,8 @@ namespace RecupereJa
 
             builder.Services.AddScoped<IItemService, ItemService>();
 
+            //builder.Services.AddSweetAlert2();
+
                 
             var app = builder.Build();
 
