@@ -1,4 +1,5 @@
-﻿using RecupereJa.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RecupereJa.Models;
 using RecupereJa.Repositorio;
 using RecupereJa.Repository;
 using RecupereJa.ViewModel;
@@ -18,15 +19,23 @@ namespace RecupereJa.Services
            await _usuarioRepositorio.AtualizarAsync(entidade);
         }
 
-        public List<ItemViewModel> BuscarItemParaHomeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senha)
         {
           return await _usuarioRepositorio.BuscarPorEmailSenhaAsync(email, senha);
         }
+
+        public async Task<int> CriarAsync(Usuario usuario) =>
+            await _usuarioRepositorio.CriarAsync(usuario);
+        //_context.Usuarios.Add(entidade);
+        //await _context.SaveChangesAsync();
+        //return entidade.Id;
+        
+        //_usuarioRepositorio.CriarAsync(usuario);
+        //    await _usuarioRepositorio.AtualizarAsync(usuario);
+        //    return usuario.Id;
+
+        public async Task<bool> DeletarAsync(int id) => 
+            await _usuarioRepositorio.DeletarAsync(id);
 
         public Task<Usuario> BuscarPorIdAsync(int id)
         {
@@ -38,13 +47,10 @@ namespace RecupereJa.Services
             throw new NotImplementedException();
         }
 
-        public Task<int> CriarAsync(Usuario entidade)
+        public List<ItemViewModel> BuscarItemParaHomeAsync()
         {
             throw new NotImplementedException();
         }
-
-        public async Task<bool> DeletarAsync(int id)
-           => await _usuarioRepositorio.DeletarAsync(id);
 
         Task<List<ItemViewModel>> ICRUD<Usuario>.BuscarItemParaHomeAsync()
         {

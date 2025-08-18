@@ -31,7 +31,7 @@ namespace RecupereJa.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _usuarioRepositorio.BuscarPorIdentificadorSenhaAsync(model.Identificador, model.Password!);
+                var user = await _usuarioRepositorio.BuscarPorIdentificadorSenhaAsync(model.Identificador, model.Senha!);
 
                 if (user != null)
                 {
@@ -63,6 +63,12 @@ namespace RecupereJa.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Registrar()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Registrar(Usuario usuario)
         {
@@ -75,11 +81,6 @@ namespace RecupereJa.Controllers
             return View(usuario);
         }
 
-        [HttpGet]
-        public IActionResult Registrar()
-        {
-            return View();
-        }
 
         public ActionResult Success()
         {

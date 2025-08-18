@@ -9,6 +9,6 @@ namespace RecupereJa.ViewModel
 
         [Required(ErrorMessage = "Senha é obrigatória")]
         [DataType(DataType.Password)]
-        public string? Password { get; set; }
+        public string? Senha { get; set; }
     }
 }
