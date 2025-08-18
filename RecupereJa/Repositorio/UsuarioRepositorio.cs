@@ -27,6 +27,24 @@ namespace RecupereJa.Repositorio
             await _itemContext.SaveChangesAsync();
         }
 
+        Task ICRUD<Usuario>.AtualizarAsync(Usuario entidade)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> DeletarAsync(int id)
+        {
+            var usuario = await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
+            if (usuario != null)
+            {
+                _itemContext.Usuarios.Remove(usuario);
+                await _itemContext.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<List<Usuario>> BuscarTodosAsync()
         {
             return await _itemContext.Usuarios.ToListAsync();
@@ -44,29 +62,12 @@ namespace RecupereJa.Repositorio
                 .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
         }
 
-        public async Task<bool> DeletarAsync(int id)
-        {
-            var usuario = await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
-            if (usuario != null)
-            {
-                _itemContext.Usuarios.Remove(usuario);
-                await _itemContext.SaveChangesAsync();
-                return true;
-            }
-
-            return false;
-        }
 
         public async Task<Usuario> BuscarPorIdAsync(int id)
         {
             return await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Id == id)!;
         }
         public async Task<List<ItemViewModel>> BuscarItemParaHomeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        Task ICRUD<Usuario>.AtualizarAsync(Usuario entidade)
         {
             throw new NotImplementedException();
         }
