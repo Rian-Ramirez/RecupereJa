@@ -1,67 +1,71 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RecupereJa.Data;
 using RecupereJa.Models;
+using RecupereJa.Repository;
 using RecupereJa.ViewModel;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RecupereJa.Repository
 {
-    public class ItemRepositorio(RecupereJaContext itemContext) : IItemRepositorio
+    public class ItemRepositorio : IItemRepositorio
     {
-        private readonly RecupereJaContext _itemContext = itemContext;
+        private readonly RecupereJaContext _ctx;
+        public ItemRepositorio(RecupereJaContext ctx) => _ctx = ctx;
 
-        public async Task<int> CriarAsync(Item entidade)
+        public async Task<Item> CriarAsync(Item entidade)
         {
-            _itemContext.Items.Add(entidade);
-            return await _itemContext.SaveChangesAsync();
+            _ctx.Set<Item>().Add(entidade);
+            await _ctx.SaveChangesAsync();
+            return entidade;
         }
 
-        public async Task<List<Item>> BuscarOrdenadoDataCriacaoDesc()
-        {
-            return await _itemContext.Items
-                .OrderByDescending(i => i.DataEncontrado)
-                .ToListAsync();
-        }
-
-        // Implementações opcionais se você usar:
-        public async Task<Item> BuscarPorIdAsync(int id)
-        {
-            return (await _itemContext.Items.FirstOrDefaultAsync(i => i.Id == id))!;
-            //return await _itemContext.Items.FirstOrDefaultAsync(i => i.Id == id)!;
-        }
+        public async Task<Item?> BuscarPorIdAsync(int id)
+            => await _ctx.Set<Item>().FindAsync(id);
 
         public async Task<List<Item>> BuscarTodosAsync()
-        {
-            return await _itemContext.Items.ToListAsync();
-        }
+            => await _ctx.Set<Item>().AsNoTracking().ToListAsync();
 
-        public async Task AtualizarAsync(Item entidade)
+        public async Task<Item> AtualizarAsync(Item entidade)
         {
-            _itemContext.Items.Update(entidade);
-            await _itemContext.SaveChangesAsync();
+            _ctx.Set<Item>().Update(entidade);
+            await _ctx.SaveChangesAsync();
+            return entidade;
         }
 
         public async Task<bool> DeletarAsync(int id)
         {
-            var item = await _itemContext.Items.FirstOrDefaultAsync(i => i.Id == id);
-            if (item != null)
-            {
-                _itemContext.Items.Remove(item);
-                await _itemContext.SaveChangesAsync();
-                return true;
-            }
-            return false;
+            var e = await _ctx.Set<Item>().FindAsync(id);
+            if (e == null) return false;
+            _ctx.Remove(e);
+            await _ctx.SaveChangesAsync();
+            return true;
         }
 
-        public async Task<List<Item>> BuscarItemParaHomeAsync() => 
-            await _itemContext.Items.OrderByDescending(i => i.Id).Take(10).ToListAsync();
-
-        Task<List<ItemViewModel>> ICRUD<Item>.BuscarItemParaHomeAsync()
+        public async Task<List<Item>> BuscarOrdenadoDataCriacaoDescAsync()
         {
-            throw new NotImplementedException();
+            return await _ctx.Set<Item>()
+                .AsNoTracking()
+                .OrderByDescending(i => i.DataCriacao)
+                .ToListAsync();
         }
 
-        public Task<List<Item>> BuscarOrdenadoDataCriacaoDescAsync()
+        public async Task<List<Item>> BuscarItemParaHomeAsync()
         {
-            throw new NotImplementedException();
+            // Critério simples: itens ativos e mais recentes
+            return await _ctx.Set<Item>()
+                .AsNoTracking()
+                .Where(i => i.Ativo)
+                .OrderByDescending(i => i.DataCriacao)
+                .Take(12)
+                .ToListAsync();
+        }
+
+        Task<Usuario> AtualizarAsync(Usuario entidade)
+        {
+            return AtualizarAsync(entidade);
+
         }
     }
 }

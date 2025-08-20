@@ -3,7 +3,7 @@
 
 <div class="image-upload-container" data-image-id="@Model.ImageId">
     <div class="image-display">
-        @if (Model.HasImage.Value)
+        @if (Model.HasImage == true)
         {
             <img src="/api/image/@Model.ImageId" alt="Imagem" class="uploaded-image" />
         }
@@ -14,12 +14,12 @@
     </div>
 
     <div class="image-controls">
-        <input type="file" id="imageFile_@Model.ImageId" accept="image/*" style="display: none;" />
+        <input type="file" id="imageFile_@Model.ImageId" accept="image/*" style="display:none;" />
         <button type="button" onclick="selectImage('@Model.ImageId')" class="btn btn-primary">
             Selecionar Imagem
         </button>
 
-        @if (Model.HasImage.Value)
+        @if (Model.HasImage == true)
         {
             <button type="button" onclick="deleteImage('@Model.ImageId')" class="btn btn-danger">
                 Remover
@@ -71,17 +71,14 @@
 </style>
 
 <script>
-
-
-    // Event listener para upload
-    document.addEventListener('DOMContentLoaded', function() {
-    @foreach (var imageId in new[] { Model.ImageId })
-    {
-        <text>
-                    document.getElementById('imageFile_@imageId').addEventListener('change', function(e) {
-                        uploadImage('@imageId', e.target.files[0])
-                    });
-        </text>
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('imageFile_@Model.ImageId');
+        if (fileInput) {
+            fileInput.addEventListener('change', function (e) {
+                if (e.target.files.length > 0) {
+                    uploadImage('@Model.ImageId', e.target.files[0]);
+                }
+            });
+        }
     });
 </script>

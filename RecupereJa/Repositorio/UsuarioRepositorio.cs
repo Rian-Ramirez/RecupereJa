@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using RecupereJa.Data;
 using RecupereJa.Models;
 using RecupereJa.Repositorio;
 using RecupereJa.Repository;
@@ -8,68 +12,50 @@ namespace RecupereJa.Repositorio
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
-        private readonly RecupereJaContext _itemContext;
+        private readonly RecupereJaContext _ctx;
+        public UsuarioRepositorio(RecupereJaContext ctx) => _ctx = ctx;
 
-        public UsuarioRepositorio(RecupereJaContext context)
+        public async Task<Usuario> CriarAsync(Usuario entidade)
         {
-            _itemContext = context;
+            _ctx.Set<Usuario>().Add(entidade);
+            await _ctx.SaveChangesAsync();
+            return entidade;
         }
 
-        public async Task<int> CriarAsync(Usuario entidade)
-        {
-            _itemContext.Usuarios.Add(entidade);
-            return await _itemContext.SaveChangesAsync();
-        }
+        public async Task<Usuario?> BuscarPorIdAsync(int id)
+            => await _ctx.Set<Usuario>().FindAsync(id);
 
-        public async Task AtualizarAsync(Usuario entidade)
-        {
-            _itemContext.Usuarios.Update(entidade);
-            await _itemContext.SaveChangesAsync();
-        }
+        public async Task<List<Usuario>> BuscarTodosAsync()
+            => await _ctx.Set<Usuario>().AsNoTracking().ToListAsync();
 
-        Task ICRUD<Usuario>.AtualizarAsync(Usuario entidade)
+        public async Task<Usuario> AtualizarAsync(Usuario entidade)
         {
-            throw new NotImplementedException();
+            _ctx.Set<Usuario>().Update(entidade);
+            await _ctx.SaveChangesAsync();
+            return entidade;
         }
 
         public async Task<bool> DeletarAsync(int id)
         {
-            var usuario = await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
-            if (usuario != null)
-            {
-                _itemContext.Usuarios.Remove(usuario);
-                await _itemContext.SaveChangesAsync();
-                return true;
-            }
-
-            return false;
+            var u = await _ctx.Set<Usuario>().FindAsync(id);
+            if (u == null) return false;
+            _ctx.Remove(u);
+            await _ctx.SaveChangesAsync();
+            return true;
         }
 
-        public async Task<List<Usuario>> BuscarTodosAsync()
+        public async Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senhaHashOuTexto)
         {
-            return await _itemContext.Usuarios.ToListAsync();
+            return await _ctx.Set<Usuario>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senhaHashOuTexto);
         }
 
-        public async Task<Usuario?> BuscarPorIdentificadorSenhaAsync(string identificador, string senha)
+        public async Task<Usuario?> BuscarPorIdentificadorSenhaAsync(string identificador, string senhaHashOuTexto)
         {
-            return await _itemContext.Usuarios.FirstOrDefaultAsync(u =>
-            (u.Email == identificador || u.Nome == identificador) && u.Senha == senha);
-        }
-
-        public async Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senha)
-        {
-            return await _itemContext.Usuarios
-                .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
-        }
-
-
-        public async Task<Usuario> BuscarPorIdAsync(int id)
-        {
-            return await _itemContext.Usuarios.FirstOrDefaultAsync(u => u.Id == id)!;
-        }
-        public async Task<List<ItemViewModel>> BuscarItemParaHomeAsync()
-        {
-            throw new NotImplementedException();
+            return await _ctx.Set<Usuario>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Identificador == identificador && u.Senha == senhaHashOuTexto);
         }
     }
 }

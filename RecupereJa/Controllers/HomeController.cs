@@ -1,51 +1,24 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RecupereJa.Models;
+using Microsoft.Extensions.Logging;
 using RecupereJa.Services;
 
 namespace RecupereJa.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IItemService _itens;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IItemService itens)
         {
             _logger = logger;
+            _itens = itens;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var itens = _itemService.BuscarItemParaHomeAsync();
-            return View(itens);
+            var recentes = await _itens.BuscarOrdenadoDataCriacaoDescAsync();
+            return View(recentes);
         }
-
-        public IActionResult Teste()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-
-        private readonly IItemService _itemService;
-
-        public HomeController(IItemService itemService)
-        {
-            _itemService = itemService;
-        }
-
-
     }
 }

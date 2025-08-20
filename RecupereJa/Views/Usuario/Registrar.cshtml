@@ -1,181 +1,37 @@
 ﻿@model RecupereJa.Models.Usuario
 
-
-
 @{
-	Layout = null;
-	ViewBag.Title = "Registro de Usuário";
+    ViewData["Title"] = "Registrar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h3 class="mb-3">Criar conta</h3>
+    <form method="post" asp-controller="Usuario" asp-action="Registrar">
+      @Html.AntiForgeryToken()
+      <div class="mb-3">
+        <label class="form-label">Nome</label>
+        <input class="form-control" asp-for="Nome" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input class="form-control" asp-for="Email" type="email" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Identificador</label>
+        <input class="form-control" asp-for="Identificador" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Senha</label>
+        <input class="form-control" asp-for="Senha" type="password" required />
+      </div>
+      <button class="btn btn-success w-100" type="submit">Registrar</button>
+    </form>
+  </div>
+</div>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-	<meta charset="UTF-8">
-	<title>Cadastro - Recupere Já</title>
-	<style>
-		* {
-			box-sizing: border-box;
-		}
 
-		html, body {
-			margin: 0;
-			padding: 0;
-			height: 100%;
-			font-family: 'Roboto', sans-serif;
-		}
-
-		/* Fundo com degradê azul + blur */
-		.background {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: linear-gradient(to bottom right, #d0eaff, #0077cc); /* degrade azul */
-			filter: blur(10px); /* aplica desfoque no fundo */
-			z-index: -1;
-		}
-
-		.wrapper {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			min-height: 100vh;
-			padding: 40px 20px;
-		}
-
-		.container {
-			background-color: white; /* sem transparência */
-			padding: 30px 25px;
-			border-radius: 12px;
-			max-width: 600px;
-			width: 100%;
-			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-		}
-
-		header {
-			background-color: white;
-			color: #0066cc;
-			padding: 10px;
-			text-align: center;
-			border-radius: 8px;
-			font-size: 30px; /* fonte menor */
-			margin-bottom: 25px;
-		}
-
-			header h2 {
-				margin: 0;
-				font-size: 18px;
-			}
-
-		label {
-			font-weight: bold;
-			display: block;
-			margin-bottom: 5px;
-		}
-
-		input {
-			padding: 10px;
-			border: 1px solid #ccc;
-			border-radius: 5px;
-			font-size: 1em;
-			width: 100%;
-			margin-bottom: 15px;
-		}
-
-		button {
-			padding: 10px;
-			background-color: whites;
-			color: #0066cc;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-			font-size: 1em;
-			width: 50%;
-			transition: background-color 0.3s;
-			display: block;
-			margin: 20px auto 0 auto;
-		}
-
-			button:hover {
-				background-color: #005f73;
-			}
-	</style>
-</head>
-<body>
-	<div class="background"></div> <!-- Fundo degradê com blur -->
-	<div class="wrapper">
-		<div class="container">
-			<header>
-				<h2><b>Faça seu cadastro</b></h2>
-			</header>
-			@if (TempData["Sucesso"] != null)
-			{
-				<div class="alert alert-success text-center">
-					@TempData["Sucesso"]
-				</div>
-			}
-
-			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-			<form asp-action="Registrar" asp-controller="Usuario" method="post" enctype="application/x-www-form-urlencoded">
-				<div class="mb-3">
-					@Html.LabelFor(m => m.Nome, new { @class = "form-label" })
-					@Html.TextBoxFor(m => m.Nome, new { placeholder = "Digite seu nome completo", @class = "form-control" })
-				</div>
-
-				@* Primeiro ter um um autenticador de cpf antes de adicionalo *@
-			@*	<div class="mb-3">
-					@Html.LabelFor(m => m.CPF, new { @class = "form-label" })
-					@Html.TextBoxFor(m => m.CPF, new { placeholder = "000.000.000-00", @class = "form-control" })
-				</div> *@
-
-				<div class="mb-3">
-					@Html.LabelFor(m => m.Email, new { @class = "form-label" })
-					@Html.TextBoxFor(m => m.Email, new { placeholder = "Digite seu email", @class = "form-control" })
-					@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-				</div>
-
-				<div class="mb-3">
-					@Html.LabelFor(m => m.Telefone, new { @class = "form-label" })
-					@Html.TextBoxFor(m => m.Telefone, new { placeholder = "(00) 00000-0000", @class = "form-control" })
-				</div>
-
-				<div class="mb-4">
-					@Html.LabelFor(m => m.Senha, new { @class = "form-label" })
-					@Html.PasswordFor(m => m.Senha, new { placeholder = "Digite uma senha segura", @class = "form-control" })
-					@Html.ValidationMessageFor(m => m.Senha, "", new { @class = "text-danger" })
-				</div>
-
-@* 				<div class="mb-4">
-					@Html.LabelFor(m => m.ReescreverSenha, new { @class = "form-label" })
-					@Html.PasswordFor(m => m.ReescreverSenha, new { placeholder = "Digite a senha novamente", @class = "form-control" })
-				</div> *@
-
-				<button type="submit">Cadastrar</button>
-			</form>
-		</div>
-	</div>
-</body>
-</html>
-
-Swal.fire({
-  title: "Sweet!",
-  text: "Modal with a custom image.",
-  imageUrl: "https://unsplash.it/400/200",
-  imageWidth: 400,
-  imageHeight: 200,
-  imageAlt: "Custom image"
-});
-
-<script src="
-https://cdn.jsdelivr.net/npm/sweetalert2@11.22.4/dist/sweetalert2.all.min.js
-"></script>
-<link href="
-https://cdn.jsdelivr.net/npm/sweetalert2@11.22.4/dist/sweetalert2.min.css
-" rel="stylesheet">
 @*<div class="register-container">
 	<h2 class="form-title">Registro de Usuário</h2>
 
