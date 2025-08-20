@@ -65,7 +65,7 @@ namespace RecupereJa.Controllers
         public async Task<IActionResult> Registrar(Usuario dto)
         {
             if (!ModelState.IsValid) return View(dto);
-            // ATENÇÃO: ideal usar hash de senha (ex.: BCrypt). Aqui fica como texto para simplificar.
+            // Aplicar hash na senha dps
             var created = await _usuarios.CriarAsync(dto);
             if (created?.Id > 0)
                 return RedirectToAction(nameof(Login));
