@@ -1,168 +1,76 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RecupereJa.ViewModel;
 using RecupereJa.Models;
-using RecupereJa.Repositorio;
+using RecupereJa.Services;
 
 namespace RecupereJa.Controllers
 {
     public class UsuarioController : Controller
     {
-        private readonly ILogger<UsuarioController> _logger;
-        private readonly IUsuarioRepositorio _usuarioRepositorio;
-
-        public UsuarioController(ILogger<UsuarioController> logger, IUsuarioRepositorio usuarioRepositorio)
-        {
-            _logger = logger;
-            _usuarioRepositorio = usuarioRepositorio;
-        }
-
+        private readonly IUsuarioService _usuarios;
+        public UsuarioController(IUsuarioService usuarios) => _usuarios = usuarios;
 
         [HttpGet]
-        public IActionResult Login()
+        [AllowAnonymous]
+        public IActionResult Login(string? returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string identificadorOuEmail, string senha, string? returnUrl = null)
         {
-            if (ModelState.IsValid)
+            var user = await _usuarios.AutenticarAsync(identificadorOuEmail, senha);
+            if (user == null)
             {
-                var user = await _usuarioRepositorio.BuscarPorIdentificadorSenhaAsync(model.Identificador, model.Senha!);
-
-                if (user != null)
-                {
-                    var claims = new List<Claim>
-                    {
-                        new Claim("UsuarioId", user.Id.ToString()),
-                        new Claim(ClaimTypes.Name, user.Nome),
-                        new Claim(ClaimTypes.Email, user.Email),
-                        new Claim(ClaimTypes.Role, user.Email == "adm@email.com" ? "adm" : "usuario")
-                    };
-
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-
-                    return RedirectToAction("Index", "Home");
-                }
-
-                ModelState.AddModelError("", "Credenciais inválidas");
+                ModelState.AddModelError(string.Empty, "Credenciais inválidas.");
+                return View();
             }
 
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult Proibidao()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Registrar()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Registrar(Usuario usuario)
-        {
-            if (ModelState.IsValid)
+            var claims = new[]
             {
-                await _usuarioRepositorio.CriarAsync(usuario);
-                TempData["Sucesso"] = "Usuário registrado com sucesso!";
-                return RedirectToAction("Login");
-            }
-            return View(usuario);
-        }
-
-
-        public ActionResult Success()
-        {
-            return View();
-        }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> Perfil()
-        {
-            var usuarioIdClaim = User.FindFirst("UsuarioId");
-            if (usuarioIdClaim == null)
-                return Unauthorized();
-
-            var usuarioId = int.Parse(usuarioIdClaim.Value);
-
-            var usuario = await _usuarioRepositorio.BuscarPorIdAsync(usuarioId);
-            if (usuario == null)
-                return NotFound();
-
-            byte[] fotoBytes = usuario.FotoUsuario;
-            if (fotoBytes == null || fotoBytes.Length == 0)
-            {
-                var caminhoImagem = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/shaq.jpg");
-                if (System.IO.File.Exists(caminhoImagem))
-                {
-                    fotoBytes = System.IO.File.ReadAllBytes(caminhoImagem);
-                }
-            }
-
-            var perfil = new PerfilUsuarioViewModel
-            {
-                Id = usuario.Id,
-                Nome = usuario.Nome,
-                Email = usuario.Email,
-                FotoPerfilUrl = fotoBytes,
-                Nascimento = new DateTime(1990, 7, 15),
-                Genero = "Masculino",
-                Cidade = "São Paulo",
-                Telefone = "11999999999",
-                Endereço = "Rua Exemplo, 123",
-                Rating = 4.5,
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Nome ?? user.Email ?? "Usuario")
             };
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            return View(perfil);
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+            return RedirectToAction("Index", "Item");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AlterarImagem(int usuarioId, IFormFile formFile)
-        {
-            if (formFile == null || formFile.Length == 0)
-                return RedirectToAction("Perfil");
-
-            var usuario = await _usuarioRepositorio.BuscarPorIdAsync(usuarioId);
-            if (usuario == null)
-                return NotFound();
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await formFile.CopyToAsync(memoryStream);
-                usuario.FotoUsuario = memoryStream.ToArray();
-            }
-
-            await _usuarioRepositorio.AtualizarAsync(usuario);
-
-            TempData["Sucesso"] = "Imagem alterada com sucesso!";
-            return RedirectToAction("Perfil");
-        }
-
-        public IActionResult Sac()
-        {
-            return View();
-        }
-
-        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Registrar() => View();
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Registrar(Usuario dto)
+        {
+            if (!ModelState.IsValid) return View(dto);
+            // ATENÇÃO: ideal usar hash de senha (ex.: BCrypt). Aqui fica como texto para simplificar.
+            var created = await _usuarios.CriarAsync(dto);
+            if (created?.Id > 0)
+                return RedirectToAction(nameof(Login));
+            ModelState.AddModelError(string.Empty, "Falha ao registrar usuário.");
+            return View(dto);
         }
     }
 }

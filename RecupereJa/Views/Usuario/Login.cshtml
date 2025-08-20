@@ -1,152 +1,26 @@
 ﻿@model RecupereJa.ViewModel.LoginViewModel
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Login - Recupere Já</title>
-
-    <!-- Google Fonts (opcional) -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap (caso vá usar de fato os estilos do Bootstrap) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom right, #d0eaff, #0077cc);
-            filter: blur(10px);
-            z-index: -1;
-        }
-
-        .wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        .container {
-            background-color: white;
-            padding: 30px 25px;
-            border-radius: 12px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        header {
-            background-color: white;
-            color: #0066cc;
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-            header h2 {
-                margin: 0;
-                font-size: 24px;
-                font-weight: bold;
-            }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        button {
-            padding: 10px;
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-
-            button:hover {
-                background-color: #00509e;
-            }
-
-        .text-danger {
-            font-size: 0.9em;
-        }
-
-        .alert {
-            margin-top: 15px;
-        }
-    </style>
-</head>
-<body>
-    <div class="background"></div>
-
-    <div class="wrapper">
-        <div class="container">
-            <header>
-                <h2>Login</h2>
-            </header>
-
-            <form asp-action="Login" method="post" novalidate>
-                <div class="mb-3">
-                    <label asp-for="Identificador"></label>
-                    <input asp-for="Identificador" class="form-control" placeholder="Digite seu nome de usuário ou e-mail" autocomplete="email" />
-                    <span asp-validation-for="Identificador" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Senha"></label>
-                    <input asp-for="Senha" class="form-control" placeholder="Digite sua senha" type="password" autocomplete="current-password" />
-                    <span asp-validation-for="Senha" class="text-danger"></span>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Entrar</button>
-            </form>
-
-            @if (ViewBag.Mensagem != null)
-            {
-                <div class="alert alert-danger text-center" role="alert">
-                    @ViewBag.Mensagem
-                </div>
-            }
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h3 class="mb-3">Entrar</h3>
+        <form method="post" asp-controller="Usuario" asp-action="Login">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label">E-mail ou Identificador</label>
+                <input class="form-control" name="identificadorOuEmail" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Senha</label>
+                <input class="form-control" type="password" name="senha" required />
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Entrar</button>
+        </form>
+        <div class="text-center mt-3">
+            <a asp-action="Registrar">Não tem conta? Registrar</a>
         </div>
     </div>
-
-    <!-- Scripts de validação (se estiver usando validação com unobtrusive JS) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
-</body>
-</html>
+</div>

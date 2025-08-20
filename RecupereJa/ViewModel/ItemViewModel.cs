@@ -60,7 +60,7 @@ namespace RecupereJa.ViewModel
                 Id = item.Id,
                 Titulo = item.Titulo,
                 Descricao = item.Descricao,
-                DataEncontrado = item.DataEncontrado.ToString("dd/MM/yyyy HH:mm"),
+                DataEncontrado = item.DataEncontrado?.ToString("dd/MM/yyyy HH:mm") ?? string.Empty,
                 Status = item.Status
             };
         }
