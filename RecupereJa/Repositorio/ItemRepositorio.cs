@@ -61,11 +61,5 @@ namespace RecupereJa.Repository
                 .Take(12)
                 .ToListAsync();
         }
-
-        Task<Usuario> AtualizarAsync(Usuario entidade)
-        {
-            return AtualizarAsync(entidade);
-
-        }
     }
 }
