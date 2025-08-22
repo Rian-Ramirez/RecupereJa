@@ -49,28 +49,32 @@ namespace RecupereJa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ItemViewModel viewModel)
         {
+            // Remove validação automática de propriedade calculada
             ModelState.Remove(nameof(ItemViewModel.TemDescricao));
 
             if (ModelState.IsValid)
             {
-                var item = (Item)viewModel;
-                _recuperejaContext.Add(item);
-                await _recuperejaContext.SaveChangesAsync();
-                TempData["Sucesso"] = "Item criado com sucesso!";
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var item = (Item)viewModel;
+
+                    // ✅ Agora isso vai funcionar corretamente
+                    item.IdUsuario = ObterUsuarioLogadoId();
+
+                    _recuperejaContext.Add(item);
+                    await _recuperejaContext.SaveChangesAsync();
+
+                    TempData["Sucesso"] = "Item criado com sucesso!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    // Mostra o erro na tela
+                    ModelState.AddModelError("", "Erro ao salvar: " + ex.Message);
+                }
             }
 
-            return View(viewModel);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var item = await _recuperejaContext.Items.FindAsync(id);
-            if (item == null) return NotFound();
-
-            var viewModel = ItemViewModel.FromItem(item);
+            // Retorna a view com mensagens de erro se algo falhar
             return View(viewModel);
         }
 
@@ -87,6 +91,8 @@ namespace RecupereJa.Controllers
                 try
                 {
                     var item = (Item)viewModel;
+
+                    item.IdUsuario = ObterUsuarioLogadoId();
 
                     _recuperejaContext.Update(item);
                     await _recuperejaContext.SaveChangesAsync();
@@ -149,5 +155,20 @@ namespace RecupereJa.Controllers
         {
             return _recuperejaContext.Items.Any(e => e.Id == id);
         }
+
+        private int ObterUsuarioLogadoId()
+        {
+            // Captura o claim padrão do ASP.NET Identity (que contém o ID do usuário)
+            var idString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (int.TryParse(idString, out int id))
+            {
+                return id;
+            }
+
+            throw new Exception("Usuário não autenticado ou ID inválido.");
+        }
+
+
     }
 }
