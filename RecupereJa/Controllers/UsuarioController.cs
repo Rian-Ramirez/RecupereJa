@@ -3,13 +3,23 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RecupereJa.Data;
 using RecupereJa.Models;
 using RecupereJa.Services;
+using RecupereJa.ViewModel;
 
 namespace RecupereJa.Controllers
 {
     public class UsuarioController : Controller
     {
+        private readonly RecupereJaContext _context;
+
+        public UsuarioController(RecupereJaContext context)
+        {
+            _context = context;
+        }
+
         private readonly IUsuarioService _usuarios;
         public UsuarioController(IUsuarioService usuarios) => _usuarios = usuarios;
 
@@ -72,5 +82,43 @@ namespace RecupereJa.Controllers
             ModelState.AddModelError(string.Empty, "Falha ao registrar usuário.");
             return View(dto);
         }
+
+
+        private int? ObterUsuarioLogadoId()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null)
+                return null;
+
+            if (int.TryParse(claim.Value, out int userId))
+                return userId;
+
+            return null;
+        }
+
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Perfil()
+        {
+            
+            var usuarioId = ObterUsuarioLogadoId();
+            if (usuarioId == null)
+                return RedirectToAction("Login", "Usuario");
+
+            var itensDoUsuario = _context.Items
+                .Where(i => i.IdUsuario == usuarioId.Value)
+                .ToList();
+
+            var viewModel = new PerfilUsuarioViewModel
+            {
+                Usuario = _context.Usuarios.FirstOrDefault(u => u.Id == usuarioId.Value),
+                Itens = itensDoUsuario
+            };
+
+            return View(viewModel);
+        }
+
+
     }
 }
