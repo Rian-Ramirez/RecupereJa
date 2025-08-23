@@ -7,18 +7,18 @@
     <!-- Sidebar de visualização -->
     <div class="col-md-4 sidebar">
         <div class="text-center">
-            @if (Model.FotoPerfilUrl != null && Model.FotoPerfilUrl.Length > 0)
+            @if (Model?.FotoPerfilUrl != null && Model?.FotoPerfilUrl.Length > 0)
             {
                 <img id="FotoDePerfil" src="data:image/*;base64,@(Convert.ToBase64String(Model.FotoPerfilUrl))" class="profile-photo" alt="Profile Photo" />
             }
             else
             {
-                <img id="FotoDePerfil" src="@Model.FotoPerfilUrl" class="profile-photo" alt="Profile Photo" />
+                <img id="FotoDePerfil" src="@Model?.FotoPerfilUrl" class="profile-photo" alt="Profile Photo" />
             }
 
             <!-- Novo formulário de upload -->
             <form asp-action="AlterarImagem" asp-controller="Usuario" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="usuarioId" value="@Model.Id" />
+                <input type="hidden" name="usuarioId" value="@Model?.Id" />
                 <div>
                     <label for="formFile">Alterar foto de perfil:</label>
                     <input type="file" id="formFile" name="formFile"
@@ -30,15 +30,15 @@
             </form>
         </div>
 
-        <h2>@Model.Nome</h2>
-        <p>@Model.Genero</p>
-        <p>@Model.Cidade</p>
-        <p class="rating">⭐ @Model.Rating</p>
-        <p>@Model.DataNascimentoFormatada</p>
+        <h2>@Model?.Nome</h2>
+        <p>@Model?.Genero</p>
+        <p>@Model?.Cidade</p>
+        <p class="rating">⭐ @Model?.Rating</p>
+        <p>@Model?.DataNascimentoFormatada</p>
 
         <div class="contact-info">
-            <p>Telefone: <a href="tel:@Model.Telefone">@Model.Telefone</a></p>
-            <p>E-mail: <a href="mailto:@Model.Email">@Model.Email</a></p>
+            <p>Telefone: <a href="tel:@Model?.Telefone">@Model?.Telefone</a></p>
+            <p>E-mail: <a href="mailto:@Model?.Email">@Model?.Email</a></p>
         </div>
     </div>
 
