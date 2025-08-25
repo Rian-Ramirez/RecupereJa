@@ -1,10 +1,18 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Recupere Já</title>
+    <title>SAC - Recupere Já</title>
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        /* Estilo geral do site */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -60,7 +68,6 @@
                 color: #0066cc;
             }
 
-        /* Dropdown */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -92,133 +99,6 @@
             display: block;
         }
 
-        main {
-            padding: 60px 20px 80px;
-            text-align: center;
-        }
-
-            main h2 {
-                font-size: 24px;
-                margin-top: 0;
-            }
-
-        /* Container dos cards */
-        .cards-container {
-            margin-top: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        /* Cards clicáveis */
-        .card {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            padding: 15px;
-            text-align: left;
-            transition: transform 0.2s;
-        }
-
-            .card:hover {
-                transform: translateY(-3px);
-            }
-
-            .card img {
-                width: 100%;
-                height: 160px;
-                object-fit: cover;
-                border-radius: 6px;
-                margin-bottom: 10px;
-            }
-
-            .card h3 {
-                margin: 5px 0;
-                font-size: 18px;
-            }
-
-            .card p {
-                margin: 3px 0;
-                font-size: 14px;
-                color: #555;
-            }
-
-            .card .info {
-                font-size: 13px;
-                color: #777;
-            }
-
-        footer {
-            background-color: #0066cc;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            width: 100%;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1 class="TituloEmpresa">Recupere Já</h1>
-        <nav>
-            <div class="dropdown">
-                <a class="menu-btn"><i class="fa-solid fa-user"></i></a>
-                <div class="dropdown-content">
-                    <a href="login.html">Entrar</a>
-                    <a href="cadastroconta.html">Cadastrar-se</a>
-                    <a href="perfil.html">Conta</a>
-                    <a href="cadastrodeproduto.html">Cadastrar um produto</a>
-                </div>
-            </div>
-            <a class="menu-btn" href="Sac.html"><i class="fa-solid fa-headset"></i></a>
-        </nav>
-    </header>
-
-    <main>
-        <h2>Bem-vindo à Recupere Já!</h2>
-
-        <!-- Container para cards dinâmicos -->
-        <div class="cards-container" id="cardsContainer">
-            <!-- Exemplo de card clicável com todos os dados -->
-            <a href="detalhesProduto.html" class="card">
-                <img src="produto.jpg" alt="Produto">
-                <h3>Nome do Produto</h3>
-                <p>Descrição do produto</p>
-                <p class="info">Encontrado em: São Paulo</p>
-                <p class="info">Data: 18/08/2025</p>
-            </a>
-            <!-- O backend C# vai gerar mais cards dinamicamente aqui -->
-        </div>
-    </main>
-
-    <footer>
-        &copy; 2025 Recupere Já. Todos os direitos reservados.
-    </footer>
-
-    <script>
-        // Exemplo de uso de arrow function: manipulação ao carregar a página
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("Página carregada e pronta 🚀");
-        });
-    </script>
-    <title>SAC - Recupere Já</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        /* Fundo degradê com blur */
         .background {
             position: fixed;
             top: 0;
@@ -247,20 +127,15 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        header {
+        .sac-header {
             background-color: #ffffff;
             color: #0066cc;
             padding: 10px;
             text-align: center;
             border-radius: 8px;
-            font-size: 300px;
+            font-size: 18px;
             margin-bottom: 25px;
         }
-
-            header h2 {
-                margin: 0;
-                font-size: 18px;
-            }
 
         label {
             font-weight: bold;
@@ -299,22 +174,48 @@
             button:hover {
                 background-color: #005f73;
             }
+
+        footer {
+            background-color: #0066cc;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            width: 100%;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <h1 class="TituloEmpresa">Recupere Já</h1>
+        <nav>
+            <div class="dropdown">
+                <a class="menu-btn"><i class="fa-solid fa-user"></i></a>
+                <div class="dropdown-content">
+                    <a href="login.html">Entrar</a>
+                    <a href="cadastroconta.html">Cadastrar-se</a>
+                    <a href="perfil.html">Conta</a>
+                    <a href="cadastrodeproduto.html">Cadastrar um produto</a>
+                </div>
+            </div>
+            <a class="menu-btn" href="Sac.html"><i class="fa-solid fa-headset"></i></a>
+        </nav>
+    </header>
+
     <div class="background"></div>
+
     <div class="wrapper">
         <div class="container">
-            <header>
+            <div class="sac-header">
                 <h2><b>Fale com o SAC</b></h2>
-            </header>
+            </div>
 
             <form>
                 <label for="nome">Nome:</label>
                 <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
 
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="ema il" placeholder="exemplo@exemplo.com" required>
+                <input type="email" id="email" name="email" placeholder="exemplo@exemplo.com" required>
 
                 <label for="assunto">Assunto:</label>
                 <input type="text" id="assunto" name="assunto" placeholder="Qual é o assunto?" required>
@@ -326,5 +227,15 @@
             </form>
         </div>
     </div>
+
+    <footer>
+        &copy; 2025 Recupere Já. Todos os direitos reservados.
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("Página carregada e pronta 🚀");
+        });
+    </script>
 </body>
 </html>

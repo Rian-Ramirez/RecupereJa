@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RecupereJa.Services;
+using RecupereJa.ViewModel;
 
 namespace RecupereJa.Controllers
 {
@@ -18,7 +19,16 @@ namespace RecupereJa.Controllers
         public async Task<IActionResult> Index()
         {
             var recentes = await _itens.BuscarOrdenadoDataCriacaoDescAsync();
-            return View(recentes);
+
+            var viewModel = recentes.Select(i => new ItemViewModel
+            {
+                Id = i.Id,
+                Titulo = i.Titulo,
+                DataEncontrado = i.DataEncontrado?.ToString("dd/MM/yyyy HH:mm") ?? string.Empty,
+            }).ToList();
+
+            return View(viewModel);
         }
+
     }
 }

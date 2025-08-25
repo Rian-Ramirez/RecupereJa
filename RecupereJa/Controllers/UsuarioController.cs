@@ -14,14 +14,13 @@ namespace RecupereJa.Controllers
     public class UsuarioController : Controller
     {
         private readonly RecupereJaContext _context;
+        private readonly IUsuarioService _usuarios;
 
-        public UsuarioController(RecupereJaContext context)
+        public UsuarioController(RecupereJaContext context, IUsuarioService usuarios)
         {
             _context = context;
+            _usuarios = usuarios;
         }
-
-        private readonly IUsuarioService _usuarios;
-        public UsuarioController(IUsuarioService usuarios) => _usuarios = usuarios;
 
         [HttpGet]
         [AllowAnonymous]
