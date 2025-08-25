@@ -15,189 +15,252 @@
             padding: 0;
             height: 100%;
             font-family: 'Roboto', sans-serif;
-        }
-
-        /* Fundo degradê com blur */
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
             background: linear-gradient(to bottom right, #d0eaff, #0077cc);
-            filter: blur(10px);
-            z-index: -1;
         }
 
         .wrapper {
             display: flex;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
             padding: 40px 20px;
         }
 
         .container {
             background-color: white;
-            padding: 30px 25px;
+            padding: 30px;
             border-radius: 12px;
-            max-width: 450px;
+            max-width: 1000px;
             width: 100%;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            text-align: center;
         }
 
         header {
-            background-color: white;
-            color: #0066cc;
-            padding: 10px;
             text-align: center;
-            border-radius: 8px;
-            font-size: 18px;
             margin-bottom: 25px;
         }
 
             header h2 {
                 margin: 0;
-                font-size: 18px;
+                color: #0066cc;
             }
 
+        .profile-section {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+            gap: 30px;
+            padding: 0 10px;
+        }
+
         .profile-pic {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid #0066cc;
-            margin-bottom: 10px;
+            position: relative;
+            left: -50px;
         }
 
-        .profile-info p {
-            margin: 8px 0;
-            font-size: 1em;
-            text-align: left;
+        .profile-info {
+            flex: 1;
         }
 
-        .styled-button {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-            font-size: 1em;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.3s;
-        }
-
-            .styled-button:hover {
-                border-color: #0066cc;
-                background-color: #f0f8ff;
+            .profile-info p {
+                margin: 6px 0;
+                font-size: 1em;
             }
 
-        .edit-fields {
-            display: none;
+        .products-section {
             margin-top: 20px;
-            text-align: left;
         }
 
-            .edit-fields input {
-                padding: 8px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 1em;
+            .products-section h3 {
+                margin-bottom: 15px;
+                color: #0066cc;
+            }
+
+        .no-products {
+            font-size: 1em;
+            color: #555;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            position: relative;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+            .product-card img {
                 width: 100%;
+                height: 140px;
+                object-fit: cover;
+                border-radius: 8px;
                 margin-bottom: 10px;
             }
 
-        /* Campo de upload customizado */
-        .file-input-wrapper {
-            position: relative;
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+            .product-card h4 {
+                margin: 5px 0;
+                font-size: 1em;
+                color: #333;
+            }
+
+        .delete-icon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-            .file-input-wrapper input[type="file"] {
-                display: none;
-            }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
 
-            .file-input-wrapper span {
-                flex: 1;
-                padding: 8px;
-                color: #666;
-            }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
 
-            .file-input-wrapper button {
-                background-color: #0066cc;
-                color: white;
+        .modal-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+            .modal-buttons button {
+                padding: 10px 20px;
                 border: none;
-                padding: 8px 12px;
-                font-size: 1.2em;
+                border-radius: 6px;
                 cursor: pointer;
+                font-size: 1em;
             }
 
-                .file-input-wrapper button:hover {
-                    background-color: #004d99;
-                }
+            .modal-buttons .yes {
+                background: red;
+                color: white;
+            }
+
+            .modal-buttons .no {
+                background: #ccc;
+            }
     </style>
 </head>
 <body>
-    <div class="background"></div>
     <div class="wrapper">
         <div class="container">
             <header>
                 <h2><b>Meu Perfil</b></h2>
             </header>
 
-            <!-- Foto de perfil -->
-            <img src="assets/steve.jpg" alt="Foto de Perfil" class="profile-pic">
-
-            <!-- Informações -->
-            <div class="profile-info">
-                <p><strong>Nome Completo:</strong> João Silva</p>
-                <p><strong>Nome de Usuário:</strong> joaosilva</p>
-                <p><strong>Telefone:</strong> (11) 98765-4321</p>
-                <p><strong>Email:</strong> joaosilva@gmail.com</p>
-                <p><strong>Localização:</strong> São Paulo, SP</p>
+            <!-- Seção Perfil -->
+            <div class="profile-section">
+                <img src="assets/steve.jpg" alt="Foto de Perfil" class="profile-pic">
+                <div class="profile-info">
+                    <p><strong>Nome Completo:</strong></p>
+                    <p><strong>Nome de Usuário:</strong></p>
+                    <p><strong>Telefone:</strong></p>
+                    <p><strong>Email:</strong></p>
+                    <p><strong>Localização:</strong></p>
+                </div>
             </div>
 
-            <!-- Botão para editar -->
-            <button class="styled-button" onclick="toggleEdit()">Editar Perfil</button>
+            <!-- Produtos -->
+            <div class="products-section">
+                <h3>Meus Produtos</h3>
+                <div id="noProducts" class="no-products">Você não tem nenhum produto cadastrado.</div>
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+        </div>
+    </div>
 
-            <!-- Campos para edição -->
-            <div class="edit-fields" id="editSection">
-
-                <!-- Campo de foto customizado -->
-                <div class="file-input-wrapper">
-                    <span>Escolher nova foto...</span>
-                    <input type="file" id="fotoPerfil" accept="image/*" onchange="updateFileName()">
-                    <button type="button" onclick="document.getElementById('fotoPerfil').click()">+</button>
-                </div>
-
-                <input type="text" placeholder="Nome Completo">
-                <input type="text" placeholder="Nome de Usuário">
-                <input type="tel" placeholder="(XX) XXXXX-XXXX">
-                <input type="text" placeholder="exemplo@exemplo.com">
-                <input type="text" placeholder="Cidade, Estado">
-
-                <button class="styled-button">Salvar Alterações</button>
+    <!-- Modal de exclusão -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h3>Excluir produto</h3>
+            <p>Tem certeza que deseja excluir este produto?</p>
+            <div class="modal-buttons">
+                <button class="no" onclick="closeModal()">Não</button>
+                <button class="yes" onclick="confirmDelete()">Sim</button>
             </div>
         </div>
     </div>
 
     <script>
-        function toggleEdit() {
-          document.getElementById("editSection").style.display = "block";
-        }
+        let productToDelete = null;
+        const products = []; // lista simulada
 
-        function updateFileName() {
-          const fileInput = document.getElementById("fotoPerfil");
-          const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "Escolher nova foto...";
-          document.querySelector(".file-input-wrapper span").textContent = fileName;
-        }
+        const productsGrid = document.getElementById("productsGrid");
+        const noProducts = document.getElementById("noProducts");
+
+        const renderProducts = () => {
+          productsGrid.innerHTML = "";
+          if (products.length === 0) {
+            noProducts.style.display = "block";
+          } else {
+            noProducts.style.display = "none";
+            products.forEach(p => {
+              const card = document.createElement("div");
+              card.classList.add("product-card");
+              card.innerHTML = `
+                <img src="${p.image}" alt="${p.name}">
+                <h4>${p.name}</h4>
+                <button class="delete-icon" onclick="openModal('${p.id}')">×</button>
+              `;
+              productsGrid.appendChild(card);
+            });
+          }
+        };
+
+        const openModal = (productId) => {
+          productToDelete = productId;
+          document.getElementById("deleteModal").style.display = "flex";
+        };
+
+        const closeModal = () => {
+          productToDelete = null;
+          document.getElementById("deleteModal").style.display = "none";
+        };
+
+        const confirmDelete = () => {
+          if (productToDelete) {
+            console.log("Excluir produto ID:", productToDelete);
+            closeModal();
+          }
+        };
+
+        renderProducts();
     </script>
 </body>
 </html>
