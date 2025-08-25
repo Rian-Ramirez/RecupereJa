@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RecupereJa.Repository;
+using RecupereJa.Data;
 
 #nullable disable
 
 namespace RecupereJa.Migrations
 {
     [DbContext(typeof(RecupereJaContext))]
-    partial class ItemContextModelSnapshot : ModelSnapshot
+    partial class RecupereJaContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -30,22 +30,23 @@ namespace RecupereJa.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("DataEncontrado")
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DataEncontrado")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Descricao")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("IdUsuario")
                         .HasColumnType("int");
 
-                    b.Property<string>("ImagemUrl")
+                    b.Property<string>("Nome")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("Status")
@@ -53,15 +54,12 @@ namespace RecupereJa.Migrations
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("Items");
                 });
@@ -76,17 +74,26 @@ namespace RecupereJa.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
 
-                    b.Property<string>("Nome")
+                    b.Property<byte[]>("FotoUsuario")
+                        .HasColumnType("longblob");
+
+                    b.Property<string>("Identificador")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
                     b.Property<string>("Senha")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.HasKey("Id");
 
@@ -97,7 +104,9 @@ namespace RecupereJa.Migrations
                 {
                     b.HasOne("RecupereJa.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioId");
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Usuario");
                 });

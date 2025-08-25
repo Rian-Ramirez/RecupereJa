@@ -1,92 +1,26 @@
 ﻿@model RecupereJa.ViewModel.LoginViewModel
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<style>
-    body {
-        background-color: #808080;
-        color: #b30000;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-    }
-
-    .login-container {
-        width: 100%;
-        max-width: 400px;
-        padding: 30px;
-        background-color: #4d4d4d;
-        border-radius: 12px;
-        box-shadow: 0 0 25px rgba(179, 0, 0, 0.5);
-    }
-
-        .login-container h2 {
-            text-align: center;
-            color: #b30000;
-            margin-bottom: 25px;
-        }
-
-    label {
-        color: #e6e6e6;
-        font-weight: 500;
-    }
-
-    .form-control {
-        background-color: #808080;
-        border: 1px solid #b30000;
-        color: #fff;
-    }
-
-        .form-control:focus {
-            background-color: #999999;
-            border-color: #ff0000;
-            box-shadow: 0 0 5px rgba(255, 0, 0, 0.6);
-            color: #fff;
-        }
-
-    .btn-primary {
-        background-color: #b30000;
-        border: none;
-        color: #fff;
-        font-weight: bold;
-        padding: 10px;
-        border-radius: 6px;
-        transition: background-color 0.3s ease-in-out;
-    }
-
-        .btn-primary:hover {
-            background-color: #800000;
-        }
-
-    .text-danger {
-        color: #ff6666;
-        font-size: 0.9rem;
-    }
-</style>
-
-<div class="login-container">
-    <h2>Login</h2>
-
-    <form asp-action="Login" method="post" novalidate>
-        <div class="form-group mb-3">
-            <label asp-for="Username"></label>
-            <input asp-for="Username" class="form-control" placeholder="Digite seu email" autocomplete="E-mail" />
-            <span asp-validation-for="Username" class="text-danger"></span>
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h3 class="mb-3">Entrar</h3>
+        <form method="post" asp-controller="Usuario" asp-action="Login">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label">E-mail ou Identificador</label>
+                <input class="form-control" name="identificadorOuEmail" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Senha</label>
+                <input class="form-control" type="password" name="senha" required />
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Entrar</button>
+        </form>
+        <div class="text-center mt-3">
+            <a asp-action="Registrar">Não tem conta? Registrar</a>
         </div>
-
-        <div class="form-group mb-4">
-            <label asp-for="Password"></label>
-            <input asp-for="Password" class="form-control" placeholder="Digite sua senha" type="password" autocomplete="current-password" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-
-        <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Entrar</button>
-        </div>
-    </form>
+    </div>
 </div>

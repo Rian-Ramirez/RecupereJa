@@ -1,48 +1,37 @@
-﻿using System.Diagnostics.Eventing.Reader;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 
 namespace RecupereJa.Models
 {
     public class Item
     {
+        [Key]
         public int Id { get; set; }
 
+        [Required]
+        public string Nome { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "O título é obrigatório.")]
-        [StringLength(100, ErrorMessage = "O título deve ter no máximo 100 caracteres.")]
-        public string Titulo { get; set; }
+        public string? Descricao { get; set; }
 
 
-        [StringLength(500, ErrorMessage = "A descrição deve ter no máximo 500 caracteres.")]
-        public string? Descricao {  get; set; }
+        [ForeignKey(nameof(Usuario))] //Não colocar acento em usuário, vai quebrar
+        public int IdUsuario { get; set; }
 
-<<<<<<< HEAD
+
+        public Usuario Usuario { get; set; } = null!;
+
+        public bool Status { get; set; } = false;
         
-=======
+        public bool Ativo { get; set; } = true;
 
->>>>>>> 03f885db24cc1eb56f10f1ade9406a9b93b2097a
-        [Display(Name = "Profile Picture")]
-        public byte[] ImagemObjeto { get; set; }
+        public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
 
 
-        [Required(ErrorMessage = "A data é obrigatória.")]
-        public DateTime DataEncontrado { get; set; }
+        [Required]
+        [MaxLength(150)]
+        public string Titulo { get; set; } = string.Empty;
 
 
-        [Required(ErrorMessage = "A cidade é obrigatória.")]
-        [StringLength(50)]
-        public string Cidade {  get; set; }
-
-
-        public bool Status {  get; set; }
-
-
-        [ForeignKey("Usuário")]
-        public int IdUsuario {  get; set; }
-
-
-        public Usuario? Usuario { get; set; }
+        public DateTime? DataEncontrado { get; set; }
     }
 }

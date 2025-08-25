@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using RecupereJa.Models;
 
 namespace RecupereJa.ViewModel
 {
     public class PerfilUsuarioViewModel
     {
+        public int Id { get; set; }
+
         public string Nome { get; set; }
         
         public string Cidade { get; set; }
@@ -24,5 +27,9 @@ namespace RecupereJa.ViewModel
         public DateTime Nascimento{ get; set; }
         
         public string DataNascimentoFormatada => Nascimento.ToString("dd/MM/yyyy");
+
+        public Usuario Usuario { get; set; }
+        public List<Item> Itens { get; set; } = new();
+
     }
 }

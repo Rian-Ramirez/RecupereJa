@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using RecupereJa.Data;
 using RecupereJa.Filtros;
 using RecupereJa.Models;
-using RecupereJa.Repository;
 using RecupereJa.Services;
 using RecupereJa.ViewModel;
 
@@ -13,17 +12,17 @@ namespace RecupereJa.Controllers
     public class ItemController : Controller
     {
         private readonly IItemService _itemService;
-        private readonly RecupereJaContext _itemContext;
+        private readonly RecupereJaContext _recuperejaContext;
 
-        public ItemController(IItemService itemService, RecupereJaContext itemContext)
+        public ItemController(IItemService itemService, RecupereJaContext recuperejaContext)
         {
             _itemService = itemService;
-            _itemContext = itemContext;
+            _recuperejaContext = recuperejaContext;
         }
 
         public async Task<IActionResult> Index()
         {
-            var items = await _itemService.BuscarOrdenadoDataCriacaoDesc();
+            var items = await _itemService.BuscarOrdenadoDataCriacaoDescAsync();
             var itemViewModel = items.Select(ItemViewModel.FromItem).ToList();
 
             return View(itemViewModel);
@@ -34,7 +33,7 @@ namespace RecupereJa.Controllers
         {
             if (id == null) return NotFound();
 
-            var item = await _itemContext.Items.FirstOrDefaultAsync(m => m.Id == id);
+            var item = await _recuperejaContext.Items.FirstOrDefaultAsync(m => m.Id == id);
             if (item == null) return NotFound();
 
             var itemViewModel = ItemViewModel.FromItem(item);
@@ -50,28 +49,32 @@ namespace RecupereJa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ItemViewModel viewModel)
         {
+            // Remove validação automática de propriedade calculada
             ModelState.Remove(nameof(ItemViewModel.TemDescricao));
 
             if (ModelState.IsValid)
             {
-                var item = (Item)viewModel;
-                _itemContext.Add(item);
-                await _itemContext.SaveChangesAsync();
-                TempData["Sucesso"] = "Item criado com sucesso!";
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var item = (Item)viewModel;
+
+                    // ✅ Agora isso vai funcionar corretamente
+                    item.IdUsuario = ObterUsuarioLogadoId();
+
+                    _recuperejaContext.Add(item);
+                    await _recuperejaContext.SaveChangesAsync();
+
+                    TempData["Sucesso"] = "Item criado com sucesso!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    // Mostra o erro na tela
+                    ModelState.AddModelError("", "Erro ao salvar: " + ex.Message);
+                }
             }
 
-            return View(viewModel);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var item = await _itemContext.Items.FindAsync(id);
-            if (item == null) return NotFound();
-
-            var viewModel = ItemViewModel.FromItem(item);
+            // Retorna a view com mensagens de erro se algo falhar
             return View(viewModel);
         }
 
@@ -89,8 +92,10 @@ namespace RecupereJa.Controllers
                 {
                     var item = (Item)viewModel;
 
-                    _itemContext.Update(item);
-                    await _itemContext.SaveChangesAsync();
+                    item.IdUsuario = ObterUsuarioLogadoId();
+
+                    _recuperejaContext.Update(item);
+                    await _recuperejaContext.SaveChangesAsync();
                     TempData["Sucesso"] = "Item atualizado com sucesso!";
                 }
                 catch (DbUpdateConcurrencyException)
@@ -109,7 +114,7 @@ namespace RecupereJa.Controllers
         {
             if (id == null) return NotFound();
 
-            var item = await _itemContext.Items.FirstOrDefaultAsync(m => m.Id == id);
+            var item = await _recuperejaContext.Items.FirstOrDefaultAsync(m => m.Id == id);
             if (item == null) return NotFound();
 
             var viewModel = ItemViewModel.FromItem(item);
@@ -120,11 +125,11 @@ namespace RecupereJa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var item = await _itemContext.Items.FindAsync(id);
+            var item = await _recuperejaContext.Items.FindAsync(id);
             if (item != null)
             {
-                _itemContext.Items.Remove(item);
-                await _itemContext.SaveChangesAsync();
+                _recuperejaContext.Items.Remove(item);
+                await _recuperejaContext.SaveChangesAsync();
                 TempData["Sucesso"] = "Item removido com sucesso!";
             }
 
@@ -135,19 +140,35 @@ namespace RecupereJa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleConcluida(int id)
         {
-            var item = await _itemContext.Items.FindAsync(id);
+            var item = await _recuperejaContext.Items.FindAsync(id);
             if (item == null) return NotFound();
 
             // Trocar "Concluída" por "Status"
             item.Status = !item.Status;
-            await _itemContext.SaveChangesAsync();
+            await _recuperejaContext.SaveChangesAsync();
+
 
             return RedirectToAction(nameof(Index));
         }
 
         private bool ItemExists(int id)
         {
-            return _itemContext.Items.Any(e => e.Id == id);
+            return _recuperejaContext.Items.Any(e => e.Id == id);
         }
+
+        private int ObterUsuarioLogadoId()
+        {
+            // Captura o claim padrão do ASP.NET Identity (que contém o ID do usuário)
+            var idString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (int.TryParse(idString, out int id))
+            {
+                return id;
+            }
+
+            throw new Exception("Usuário não autenticado ou ID inválido.");
+        }
+
+
     }
 }

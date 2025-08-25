@@ -1,8 +1,10 @@
 ﻿@model RecupereJa.Models.Usuario
 
 @{
-	ViewBag.Title = "Registro de Usuário";
+    ViewData["Title"] = "Registrar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -146,3 +148,65 @@
     </script>
 </body>
 </html>
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h3 class="mb-3">Criar conta</h3>
+    <form method="post" asp-controller="Usuario" asp-action="Registrar">
+      @Html.AntiForgeryToken()
+      <div class="mb-3">
+        <label class="form-label">Nome</label>
+        <input class="form-control" asp-for="Nome" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input class="form-control" asp-for="Email" type="email" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Identificador</label>
+        <input class="form-control" asp-for="Identificador" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Senha</label>
+        <input class="form-control" asp-for="Senha" type="password" required />
+      </div>
+      <button class="btn btn-success w-100" type="submit">Registrar</button>
+    </form>
+  </div>
+</div>
+
+
+@*<div class="register-container">
+	<h2 class="form-title">Registro de Usuário</h2>
+
+	@if (TempData["Sucesso"] != null)
+	{
+		<div class="alert alert-success text-center">
+			@TempData["Sucesso"]
+		</div>
+	}
+
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+	<form asp-action="Registrar" asp-controller="Usuario" method="post">
+
+		<div class="mb-3">
+			@Html.LabelFor(m => m.Nome, new { @class = "form-label" })
+			@Html.TextBoxFor(m => m.Nome, new { placeholder = "Digite seu nome", @class = "form-control" })
+			@Html.ValidationMessageFor(m => m.Nome, "", new { @class = "text-danger" })
+		</div>
+
+		<div class="mb-3">
+			@Html.LabelFor(m => m.Email, new { @class = "form-label" })
+			@Html.TextBoxFor(m => m.Email, new { placeholder = "Digite seu email", @class = "form-control" })
+			@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+		</div>
+
+		<div class="mb-4">
+			@Html.LabelFor(m => m.Senha, new { @class = "form-label" })
+			@Html.PasswordFor(m => m.Senha, new { placeholder = "Digite uma senha segura", @class = "form-control" })
+			@Html.ValidationMessageFor(m => m.Senha, "", new { @class = "text-danger" })
+		</div>
+
+		<button type="submit" class="btn btn-primary w-100">Registrar</button>
+	</form>
+
+</div> *@

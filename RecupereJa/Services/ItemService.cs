@@ -1,39 +1,23 @@
-﻿using RecupereJa.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using RecupereJa.Models;
 using RecupereJa.Repository;
-using RecupereJa.ViewModel;
 
 namespace RecupereJa.Services
 {
     public class ItemService : IItemService
     {
-        private readonly IItemRepositorio _itemRepositorio;
+        private readonly IItemRepositorio _iitemRepositorio;
 
-        public ItemService(IItemRepositorio itemRepositorio) =>
-            _itemRepositorio = itemRepositorio;
+        public ItemService(IItemRepositorio repo) => _iitemRepositorio = repo;
 
-        public void Atualizar(Item entidade) => _itemRepositorio.Atualizar(entidade);
+        public Task<Item> CriarAsync(Item entidade) => _iitemRepositorio.CriarAsync(entidade);
+        public Task<Item?> BuscarPorIdAsync(int id) => _iitemRepositorio.BuscarPorIdAsync(id);
+        public Task<System.Collections.Generic.List<Item>> BuscarTodosAsync() => _iitemRepositorio.BuscarTodosAsync();
+        public Task<Item> AtualizarAsync(Item entidade) => (Task<Item>)_iitemRepositorio.AtualizarAsync(entidade);
+        public Task<bool> DeletarAsync(int id) => _iitemRepositorio.DeletarAsync(id);
 
-        public Item BuscarPorId(int id) => _itemRepositorio.BuscarPorId(id);
-
-        public List<Item> BuscarTodos() => _itemRepositorio.BuscarTodos();
-
-        public int Criar(Item entidade) => _itemRepositorio.Criar(entidade);
-
-        public void Deletar(int id) => _itemRepositorio.Deletar(id);
-
-        public async Task<List<Item>> BuscarOrdenadoDataCriacaoDesc() =>
-            await _itemRepositorio.BuscarOrdenadoDataCriacaoDesc();
-
-        public List<ItemViewModel> BuscarItemParaHome()
-        {
-            var itens = _itemRepositorio.BuscarItemParaHome();
-            return itens.Select(i => new ItemViewModel
-            {
-                Id = i.Id,
-                Titulo = i.Titulo,
-                Descricao = i.Descricao,
-            //    ImagemObjeto = i.ImagemObjeto
-            }).ToList();
-        }
+        public Task<System.Collections.Generic.List<Item>> BuscarOrdenadoDataCriacaoDescAsync() => _iitemRepositorio.BuscarOrdenadoDataCriacaoDescAsync();
+        public Task<System.Collections.Generic.List<Item>> BuscarItemParaHomeAsync() => _iitemRepositorio.BuscarItemParaHomeAsync();
     }
 }

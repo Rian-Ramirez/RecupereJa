@@ -1,57 +1,75 @@
-# Visual Studio
+
+# IDE / User-specific files
+
 .vs/
+.vscode/
+.idea/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
+*.vspscc
+*.vssscc
+*.dbmdl
+*.bak
+*.jfm
 
-# Build results
+# Build / Output
+
 bin/
 obj/
+artifacts/
 [Bb]uild/
 [Bb]uild[Ll]og.*
+publish/
 
-# Package files
+
+# NuGet
+
 *.nupkg
 *.snupkg
 *.tar.gz
-
-# NuGet
-*.nupkg
 project.lock.json
 project.fragment.lock.json
-artifacts/
+*.nuget.props
+*.nuget.targets
+**/packages/*
+!**/packages/build/
 
-# VS Code settings
-.vscode/
+# Configuration / Secrets
 
-# IIS Express
-*.vspscc
-*.vssscc
-.vs/
-
-# Configuration
 appsettings.Development.json
 appsettings.Local.json
 secrets.json
+*.secret.json
 
-# Logs
+# Razor / ASP.NET generated files
+
+*.g.cs
+*.g.i.cs
+*.razor.g.cs
+*.razor.g.i.cs
+.obj/staticwebassets/
+
+
+# Logs / Temp
+
 *.log
+*.tmp
+*.cache
+*.pidb
+
+
+# Database
+
+*.mdf
+*.ldf
+*.sqlite
 
 # Windows junk files
+
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Rider / JetBrains
-.idea/
 
-# Publish outputs
-publish/
-
-# User-specific files
-*.dbmdl
-*.bak
-*.sqlite
-*.mdf
-*.ldf

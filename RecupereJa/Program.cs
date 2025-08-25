@@ -1,71 +1,52 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
-using RecupereJa.Repositorio;
+using RecupereJa.Data;
 using RecupereJa.Repository;
+using RecupereJa.Repositorio;
 using RecupereJa.Services;
 
-namespace RecupereJa
-{
-    public class Program
+var builder = WebApplication.CreateBuilder(args);
+
+// Configuração do DbContext com Pomelo MySQL
+builder.Services.AddDbContext<RecupereJaContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    new MySqlServerVersion(new Version(8, 0, 39)))
+);
+
+// Injeções de dependência
+builder.Services.AddScoped<IItemRepositorio, ItemRepositorio>();
+builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(o =>
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        o.LoginPath = "/Usuario/Login";
+        o.AccessDeniedPath = "/Usuario/AcessoNegado";
+        o.SlidingExpiration = true;
+        o.Cookie.HttpOnly = true;
+        o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                                                           .AddCookie(options =>
-                                                           {
-                                                               options.LoginPath = "/Usuario/Login";
-                                                               options.LogoutPath = "/Usuario/Logout";
-                                                           });
+builder.Services.AddControllersWithViews();
 
-            builder.Services.Configure<FormOptions>(options =>
-            {
-                options.MultipartBodyLengthLimit = 5 * 1024 * 1024; // 5MB
-            });
-
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
-            // Configurar Entity Framework
-            builder.Services.AddDbContext<RecupereJaContext>(options => options.UseMySql
-            (builder.Configuration.GetConnectionString("DefaultConnection"),
-            ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
-
-
-            builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
-
-            builder.Services.AddScoped<IItemRepositorio, ItemRepositorio>();
-
-            builder.Services.AddScoped<IItemService, ItemService>();
-
-                
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Item}/{action=Index}/{id?}");
-
-            app.Run();
-        }
-    }
+var app = builder.Build();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Usuario}/{action=Login}/{id?}"
+);
+
+app.Run();

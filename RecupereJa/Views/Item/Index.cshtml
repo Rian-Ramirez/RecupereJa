@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<RecupereJa.ViewModel.ItemViewModel>
 
 @{
-    ViewData["Title"] = "Gerenciador de Itens";
+    ViewData["Title"] = "Itens";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="row">
@@ -85,3 +86,22 @@
         }
     </div>
 </div>
+
+
+@* <h2>Itens</h2>
+<table class="table table-striped">
+  <thead><tr><th>ID</th><th>Título</th><th>Criado em</th><th>Ativo</th></tr></thead>
+  <tbody>
+  @foreach (var i in Model ?? Enumerable.Empty<RecupereJa.Models.Item>())
+  {
+      <tr>
+        <td>@i.Id</td>
+        <td>@i.Titulo</td>
+        <td>@i.DataCriacao.ToString("yyyy-MM-dd HH:mm")</td>
+        <td>@(i.Ativo ? "Sim" : "Não")</td>
+      </tr>
+  }
+  </tbody>
+</table>
+
+ *@
