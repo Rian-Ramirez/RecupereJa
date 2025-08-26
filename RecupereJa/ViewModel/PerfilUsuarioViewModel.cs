@@ -32,4 +32,5 @@ namespace RecupereJa.ViewModel
         public List<Item> Itens { get; set; } = new();
 
     }
+
 }
