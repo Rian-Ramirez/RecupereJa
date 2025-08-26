@@ -27,4 +27,5 @@ namespace RecupereJa.ViewModel
         
         public string DataNascimentoFormatada => Nascimento.ToString("dd/MM/yyyy");
     }
+
 }
