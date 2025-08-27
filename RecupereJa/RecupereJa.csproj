@@ -8,11 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\AccountController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Views\Home\Class.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.5.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="CurrieTechnologies.Razor.SweetAlert2" Version="5.6.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.18">
