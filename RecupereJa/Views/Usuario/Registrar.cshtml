@@ -102,43 +102,6 @@
     </style>
 </head>
 <body>
-    <div class="background"></div> <!-- Fundo degradê com blur -->
-    <div class="wrapper">
-        <div class="container">
-            <header>
-                <h2><b>Faça seu cadastro</b></h2>
-            </header>
-
-            <form>
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
-
-                <label for="sobrenome">Sobrenome:</label>
-                <input type="text" id="sobrenome" name="sobrenome" placeholder="Digite seu sobrenome">
-
-                <label for="cpf">CPF:</label>
-                <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00">
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="exemplo@exemplo.com">
-
-                <label for="telefone">Telefone:</label>
-                <input type="text" id="telefone" name="telefone" placeholder="(00) 00000-0000">
-
-                <label for="diaNascimento">Sua data de nascimento:</label>
-                <input type="date" id="diaNascimento" name="diaNascimento">
-
-                <label for="senha">Crie uma senha:</label>
-                <input type="password" id="senha" name="senha" placeholder="Digite uma senha segura">
-
-                <label for="reescritaSenha">Reescreva a senha:</label>
-                <input type="password" id="reescritaSenha" name="reescritaSenha" placeholder="Digite a senha novamente">
-
-                <button type="button" id="btnCadastrar">Cadastrar</button>
-            </form>
-        </div>
-    </div>
-
     <script>
         const btnCadastrar = document.getElementById("btnCadastrar");
 
@@ -149,29 +112,29 @@
 </body>
 </html>
 <div class="row justify-content-center">
-  <div class="col-md-6">
-    <h3 class="mb-3">Criar conta</h3>
-    <form method="post" asp-controller="Usuario" asp-action="Registrar">
-      @Html.AntiForgeryToken()
-      <div class="mb-3">
-        <label class="form-label">Nome</label>
-        <input class="form-control" asp-for="Nome" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input class="form-control" asp-for="Email" type="email" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Identificador</label>
-        <input class="form-control" asp-for="Identificador" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Senha</label>
-        <input class="form-control" asp-for="Senha" type="password" required />
-      </div>
-      <button class="btn btn-success w-100" type="submit">Registrar</button>
-    </form>
-  </div>
+    <div class="col-md-6">
+        <h3 class="mb-3">Criar conta</h3>
+        <form method="post" asp-controller="Usuario" asp-action="Registrar">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <input class="form-control" asp-for="Nome" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input class="form-control" asp-for="Email" type="email" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Identificador</label>
+                <input class="form-control" asp-for="Identificador" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Senha</label>
+                <input class="form-control" asp-for="Senha" type="password" required />
+            </div>
+            <button class="btn btn-success w-100" type="submit">Registrar</button>
+        </form>
+    </div>
 </div>
 
 
