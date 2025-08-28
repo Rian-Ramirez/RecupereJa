@@ -188,18 +188,6 @@
 <body>
     <header>
         <h1 class="TituloEmpresa">Recupere Já</h1>
-        <nav>
-            <div class="dropdown">
-                <a class="menu-btn"><i class="fa-solid fa-user"></i></a>
-                <div class="dropdown-content">
-                    <a href="login.html">Entrar</a>
-                    <a href="cadastroconta.html">Cadastrar-se</a>
-                    <a href="perfil.html">Conta</a>
-                    <a href="cadastrodeproduto.html">Cadastrar um produto</a>
-                </div>
-            </div>
-            <a class="menu-btn" href="Sac.html"><i class="fa-solid fa-headset"></i></a>
-        </nav>
     </header>
 
     <div class="background"></div>
@@ -210,7 +198,8 @@
                 <h2><b>Fale com o SAC</b></h2>
             </div>
 
-            <form>
+            <form method="post" asp-controller="Usuario" asp-action="Sac">
+
                 <label for="nome">Nome:</label>
                 <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
 
