@@ -45,10 +45,6 @@ namespace RecupereJa.Migrations
                     b.Property<int>("IdUsuario")
                         .HasColumnType("int");
 
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
 
@@ -71,6 +67,9 @@ namespace RecupereJa.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cargo")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()

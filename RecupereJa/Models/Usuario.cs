@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using RecupereJa.Enums;
 
 namespace RecupereJa.Models
 {
@@ -28,6 +29,9 @@ namespace RecupereJa.Models
         [MaxLength(200, ErrorMessage = "A senha pode ter no máximo 200 caracteres")]
         public string Senha { get; set; } = string.Empty;
 
+
+        //Define por padrão como usuário
+        public CargoEnum Cargo { get; set; } = CargoEnum.Usuario;
 
         public byte[]? FotoUsuario { get; set; }
     }
