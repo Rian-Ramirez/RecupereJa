@@ -12,7 +12,7 @@ using RecupereJa.Data;
 namespace RecupereJa.Migrations
 {
     [DbContext(typeof(RecupereJaContext))]
-    [Migration("20250828005632_initial-migration")]
+    [Migration("20250828220424_initial-migration")]
     partial class initialmigration
     {
         /// <inheritdoc />
