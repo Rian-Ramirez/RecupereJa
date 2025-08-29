@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RecupereJa.Enums;
 using RecupereJa.Services;
 using RecupereJa.ViewModel;
 
@@ -30,5 +32,16 @@ namespace RecupereJa.Controllers
             return View(viewModel);
         }
 
+        //[Authorize(Roles = "Gerente")]
+        //public ActionResult Relatorio()
+        //{
+        //    return View();
+        //}
+
+        [Authorize(CargoEnum == CargoEnum.Mestre)]
+        public IActionResult AdministraçãoGeral()
+        {
+            return View();
+        }
     }
 }
