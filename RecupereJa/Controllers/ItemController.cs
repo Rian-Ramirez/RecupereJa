@@ -1,174 +1,138 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecupereJa.Data;
-using RecupereJa.Filtros;
 using RecupereJa.Models;
-using RecupereJa.Services;
 using RecupereJa.ViewModel;
 
 namespace RecupereJa.Controllers
 {
-    [RequireAuthentication]
     public class ItemController : Controller
     {
-        private readonly IItemService _itemService;
-        private readonly RecupereJaContext _recuperejaContext;
+        private readonly RecupereJaContext _context;
 
-        public ItemController(IItemService itemService, RecupereJaContext recuperejaContext)
+        public ItemController(RecupereJaContext context)
         {
-            _itemService = itemService;
-            _recuperejaContext = recuperejaContext;
+            _context = context;
         }
 
+        // GET: Item
         public async Task<IActionResult> Index()
         {
-            var items = await _itemService.BuscarOrdenadoDataCriacaoDescAsync();
-            var itemViewModel = items.Select(ItemViewModel.FromItem).ToList();
+            var itens = await _context.Items
+                .Include(i => i.Usuario)
+                .ToListAsync();
 
-            return View(itemViewModel);
+            var vms = itens.Select(ItemViewModel.FromItem).ToList();
+            return View(vms);
         }
 
-        [IsAdm]
+        // GET: Item/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
 
-            var item = await _recuperejaContext.Items.FirstOrDefaultAsync(m => m.Id == id);
+            var item = await _context.Items
+                .Include(i => i.Usuario)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (item == null) return NotFound();
 
-            var itemViewModel = ItemViewModel.FromItem(item);
-            return View(itemViewModel);
+            return View(ItemViewModel.FromItem(item));
         }
 
+        // GET: Item/Create
         public IActionResult Create()
         {
-            return View(new ItemViewModel());
+            return View();
         }
 
+        // POST: Item/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ItemViewModel viewModel)
+        public async Task<IActionResult> Create(ItemViewModel vm)
         {
-            // Remove validação automática de propriedade calculada
-            ModelState.Remove(nameof(ItemViewModel.TemDescricao));
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var item = (Item)viewModel;
+                var item = (Item)vm;
 
-                    // ✅ Agora isso vai funcionar corretamente
-                    item.IdUsuario = ObterUsuarioLogadoId();
+                // 🔹 Atribui usuário fixo (teste)
+                item.IdUsuario = 1;
 
-                    _recuperejaContext.Add(item);
-                    await _recuperejaContext.SaveChangesAsync();
-
-                    TempData["Sucesso"] = "Item criado com sucesso!";
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    // Mostra o erro na tela
-                    ModelState.AddModelError("", "Erro ao salvar: " + ex.Message);
-                }
+                _context.Add(item);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-
-            // Retorna a view com mensagens de erro se algo falhar
-            return View(viewModel);
+            return View(vm);
         }
 
+        // GET: Item/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var item = await _context.Items.FindAsync(id);
+            if (item == null) return NotFound();
+
+            return View(ItemViewModel.FromItem(item));
+        }
+
+        // POST: Item/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ItemViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, ItemViewModel vm)
         {
-            if (id != viewModel.Id) return NotFound();
-
-            ModelState.Remove(nameof(ItemViewModel.TemDescricao));
+            if (id != vm.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var item = (Item)viewModel;
+                    var item = (Item)vm;
 
-                    item.IdUsuario = ObterUsuarioLogadoId();
+                    // 🔹 Garante usuário válido
+                    item.IdUsuario = 1;
 
-                    _recuperejaContext.Update(item);
-                    await _recuperejaContext.SaveChangesAsync();
-                    TempData["Sucesso"] = "Item atualizado com sucesso!";
+                    _context.Update(item);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ItemExists(viewModel.Id)) return NotFound();
-                    throw;
+                    if (!_context.Items.Any(e => e.Id == vm.Id))
+                        return NotFound();
+                    else
+                        throw;
                 }
-
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(viewModel);
+            return View(vm);
         }
 
+        // GET: Item/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var item = await _recuperejaContext.Items.FirstOrDefaultAsync(m => m.Id == id);
+            var item = await _context.Items
+                .Include(i => i.Usuario)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (item == null) return NotFound();
 
-            var viewModel = ItemViewModel.FromItem(item);
-            return View(viewModel);
+            return View(ItemViewModel.FromItem(item));
         }
 
+        // POST: Item/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var item = await _recuperejaContext.Items.FindAsync(id);
+            var item = await _context.Items.FindAsync(id);
             if (item != null)
             {
-                _recuperejaContext.Items.Remove(item);
-                await _recuperejaContext.SaveChangesAsync();
-                TempData["Sucesso"] = "Item removido com sucesso!";
+                _context.Items.Remove(item);
+                await _context.SaveChangesAsync();
             }
-
             return RedirectToAction(nameof(Index));
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ToggleConcluida(int id)
-        {
-            var item = await _recuperejaContext.Items.FindAsync(id);
-            if (item == null) return NotFound();
-
-            // Trocar "Concluída" por "Status"
-            item.Status = !item.Status;
-            await _recuperejaContext.SaveChangesAsync();
-
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ItemExists(int id)
-        {
-            return _recuperejaContext.Items.Any(e => e.Id == id);
-        }
-
-        private int ObterUsuarioLogadoId()
-        {
-            // Captura o claim padrão do ASP.NET Identity (que contém o ID do usuário)
-            var idString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
-            if (int.TryParse(idString, out int id))
-            {
-                return id;
-            }
-
-            throw new Exception("Usuário não autenticado ou ID inválido.");
-        }
-
-
     }
 }

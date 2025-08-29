@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RecupereJa.Migrations
 {
     /// <inheritdoc />
-    public partial class initialmigration : Migration
+    public partial class Item : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

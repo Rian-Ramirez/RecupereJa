@@ -1,111 +1,17 @@
 ﻿@model RecupereJa.ViewModel.ItemViewModel
 
 @{
-	ViewData["Title"] = "Detalhes do item";
+    ViewData["Title"] = "Detalhes";
 }
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Detalhes do Produto - Recupere Já</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<h2>Detalhes do Item</h2>
 
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Roboto', sans-serif;
-        }
+<div>
+    <h4>@Model.Titulo</h4>
+    <p><strong>Descrição:</strong> @Model.Descricao</p>
+    <p><strong>Data encontrado:</strong> @Model.DataEncontrado?.ToString("dd/MM/yyyy HH:mm")</p>
+    <p><strong>Status:</strong> @(Model.Status ? "Com dono" : "Perdido")</p>
+</div>
 
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom right, #d0eaff, #0077cc);
-            filter: blur(10px);
-            z-index: -1;
-        }
-
-        .wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        .container {
-            background-color: white;
-            padding: 30px 25px;
-            border-radius: 12px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-
-            .container img {
-                max-width: 100%;
-                border-radius: 8px;
-                margin-bottom: 20px;
-            }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #0066cc;
-        }
-
-        p {
-            font-size: 16px;
-            color: #333;
-            margin: 5px 0;
-        }
-
-        .info {
-            font-size: 14px;
-            color: #555;
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin: 30px 0 0 0;
-            padding: 10px 20px;
-            background-color: #ffffff;
-            color: #0066cc;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            cursor: pointer;
-        }
-
-            .back-btn:hover {
-                background-color: #005f73;
-                color: white;
-            }
-    </style>
-</head>
-<body>
-    <div class="background"></div>
-    <div class="wrapper">
-        <div class="container">
-            <img src="produto.jpg" alt="Produto">
-            <h1>Nome do Produto</h1>
-            <p>Descrição detalhada do produto, incluindo informações importantes sobre suas características e estado.</p>
-            <p class="info"><strong>Encontrado em:</strong> São Paulo</p>
-            <p class="info"><strong>Data:</strong> 18/08/2025</p>
-
-            <button class="back-btn" onclick="(() => history.back())()">
-                <i class="fa-solid fa-arrow-left"></i> Voltar
-            </button>
-        </div>
-    </div>
-</body>
-</html>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+<a asp-action="Index" class="btn btn-secondary">Voltar</a>

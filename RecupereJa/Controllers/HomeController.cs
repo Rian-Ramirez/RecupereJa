@@ -1,34 +1,33 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using RecupereJa.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using RecupereJa.Data;
 using RecupereJa.ViewModel;
+using System.Linq;
 
 namespace RecupereJa.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IItemService _itens;
+        private readonly RecupereJaContext _context;
 
-        public HomeController(ILogger<HomeController> logger, IItemService itens)
+        public HomeController(RecupereJaContext context)
         {
-            _logger = logger;
-            _itens = itens;
+            _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var recentes = await _itens.BuscarOrdenadoDataCriacaoDescAsync();
+            var itens = _context.Items
+                .Select(i => new ItemViewModel
+                {
+                    Id = i.Id,
+                    Titulo = i.Titulo,
+                    Descricao = i.Descricao,
+                    Status = i.Status,
+                    DataEncontrado = i.DataEncontrado   // ✅ DateTime? sem ToString()
+                })
+                .ToList();
 
-            var viewModel = recentes.Select(i => new ItemViewModel
-            {
-                Id = i.Id,
-                Titulo = i.Titulo,
-                DataEncontrado = i.DataEncontrado?.ToString("dd/MM/yyyy HH:mm") ?? string.Empty,
-            }).ToList();
-
-            return View(viewModel);
+            return View(itens);
         }
-
     }
 }
