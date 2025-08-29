@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RecupereJa.Enums;
+using RecupereJa.Repository;
 using RecupereJa.Services;
 using RecupereJa.ViewModel;
 
@@ -11,17 +10,21 @@ namespace RecupereJa.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IItemService _itens;
+        private readonly IItemRepositorio _itemRepositorio;
 
-        public HomeController(ILogger<HomeController> logger, IItemService itens)
+        public HomeController(ILogger<HomeController> logger, IItemService itens, IItemRepositorio itemRepositorio)
         {
             _logger = logger;
             _itens = itens;
+            _itemRepositorio = itemRepositorio;
         }
 
         public async Task<IActionResult> Index()
         {
-            var recentes = await _itens.BuscarOrdenadoDataCriacaoDescAsync();
+            // Busca apenas os aprovados
+            var recentes = await _itemRepositorio.BuscarItemParaHomeAsync();
 
+            // Monta ViewModel
             var viewModel = recentes.Select(i => new ItemViewModel
             {
                 Id = i.Id,
@@ -37,11 +40,5 @@ namespace RecupereJa.Controllers
         //{
         //    return View();
         //}
-
-        [Authorize(CargoEnum == CargoEnum.Mestre)]
-        public IActionResult AdministraçãoGeral()
-        {
-            return View();
-        }
     }
 }

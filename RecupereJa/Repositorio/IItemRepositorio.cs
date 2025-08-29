@@ -9,5 +9,11 @@ namespace RecupereJa.Repository
         Task<List<Item>> BuscarOrdenadoDataCriacaoDescAsync();
 
         Task<List<Item>> BuscarItemParaHomeAsync();
+
+
+        //Métodos novos que sintonizam com os códigos novos do ItemRepositorio
+        Task<List<Item>> BuscarPendentesAsync();
+        Task<Item?> AprovarAsync(int id);
+
     }
 }

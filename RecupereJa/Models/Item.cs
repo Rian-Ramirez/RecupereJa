@@ -17,6 +17,8 @@ namespace RecupereJa.Models
 
         public Usuario Usuario { get; set; } = null!;
 
+        public bool Aprovado { get; set; } = false;
+
         public bool Status { get; set; } = false;
         
         public bool Ativo { get; set; } = true;
