@@ -45,7 +45,8 @@ namespace RecupereJa.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Nome ?? user.Email ?? "Usuario")
+                new Claim(ClaimTypes.Name, user.Nome ?? user.Email ?? "Usuario"),
+                new Claim(ClaimTypes.Role, user.Cargo.ToString())
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);

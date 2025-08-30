@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using RecupereJa.Enums;
 
 namespace RecupereJa.Filtros
 {
@@ -8,8 +8,9 @@ namespace RecupereJa.Filtros
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (context.HttpContext.User.Claims
-                .FirstOrDefault(c=> c.Type == ClaimTypes.Role)?.Value != "adm")
+            var cargo = context.HttpContext.Session.GetString("Cargo");
+
+            if (cargo != CargoEnum.Mestre.ToString())
             {
                 context.Result = new RedirectToActionResult("Proibidao", "Usuario", null);
             }

@@ -1,0 +1,33 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<RecupereJa.Models.Item>
+
+<h2>Itens Pendentes</h2>
+
+<table>
+	<thead>
+		<tr>
+			<th>Título</th>
+			<th>Descrição</th>
+			<th>Ação</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.Titulo</td>
+				<td>@item.Descricao</td>
+				<td>
+					<form method="post" asp-action="Aprovar">
+						<input type="hidden" name="id" value="@item.Id" />
+						<button type="submit">Aprovar</button>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
