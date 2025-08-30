@@ -1,5 +1,9 @@
 ﻿@model RecupereJa.ViewModel.PerfilUsuarioViewModel
 
+@{
+    Layout = null;
+
+}
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -199,10 +203,30 @@
 
             <!-- Produtos -->
             <div class="products-section">
-                <h3>Meus Produtos</h3>
-                <div id="noProducts" class="no-products">Você não tem nenhum produto cadastrado.</div>
-                <div class="products-grid" id="productsGrid"></div>
+                <h3>Meus Itens</h3>
+
+                @if (Model.Itens == null || !Model.Itens.Any())
+                {
+                    <div class="no-products">Você não tem nenhum item cadastrado.</div>
+                }
+                else
+                {
+                    <div class="products-grid">
+                        @foreach (var item in Model.Itens)
+                        {
+                            <div class="product-card">
+                                <img src="https://via.placeholder.com/300x140.png?text=Item+@item.Id" alt="Imagem do item">
+                                <h4>@item.Titulo</h4>
+                                <p>@(item.Descricao ?? "Sem descrição")</p>
+                                <p><strong>Status:</strong> @(item.Status ? "Resolvido" : "Pendente")</p>
+                                <p><strong>Data:</strong> @item.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy")</p>
+                                <a class="btn btn-primary" href="/Item/Details/@item.Id">Ver Detalhes</a>
+                            </div>
+                        }
+                    </div>
+                }
             </div>
+
         </div>
     </div>
 
@@ -219,158 +243,148 @@
     </div>
 
     <script>
-        let productToDelete = null;
-        const products = []; // lista simulada
+                let productToDelete = null;
+                const products = []; // lista simulada
 
-        const productsGrid = document.getElementById("productsGrid");
-        const noProducts = document.getElementById("noProducts");
+                const productsGrid = document.getElementById("productsGrid");
+                const noProducts = document.getElementById("noProducts");
 
-        const renderProducts = () => {
-          productsGrid.innerHTML = "";
-          if (products.length === 0) {
-            noProducts.style.display = "block";
-          } else {
-            noProducts.style.display = "none";
-            products.forEach(p => {
-              const card = document.createElement("div");
-              card.classList.add("product-card");
-              card.innerHTML = `
-                <img src="${p.image}" alt="${p.name}">
-                <h4>${p.name}</h4>
-                <button class="delete-icon" onclick="openModal('${p.id}')">×</button>
-              `;
-              productsGrid.appendChild(card);
-            });
-          }
-        };
+                const renderProducts = () => {
+                  productsGrid.innerHTML = "";
+                  if (products.length === 0) {
+                    noProducts.style.display = "block";
+                  } else {
+                    noProducts.style.display = "none";
+                    products.forEach(p => {
+                      const card = document.createElement("div");
+                      card.classList.add("product-card");
+                      card.innerHTML = `
+                        <img src="${p.image}" alt="${p.name}">
+                        <h4>${p.name}</h4>
+                        <button class="delete-icon" onclick="openModal('${p.id}')">×</button>
+                      `;
+                      productsGrid.appendChild(card);
+                    });
+                  }
+                };
 
-        const openModal = (productId) => {
-          productToDelete = productId;
-          document.getElementById("deleteModal").style.display = "flex";
-        };
+                const openModal = (productId) => {
+                  productToDelete = productId;
+                  document.getElementById("deleteModal").style.display = "flex";
+                };
 
-        const closeModal = () => {
-          productToDelete = null;
-          document.getElementById("deleteModal").style.display = "none";
-        };
+                const closeModal = () => {
+                  productToDelete = null;
+                  document.getElementById("deleteModal").style.display = "none";
+                };
 
-        const confirmDelete = () => {
-          if (productToDelete) {
-            console.log("Excluir produto ID:", productToDelete);
-            closeModal();
-          }
-        };
+                const confirmDelete = () => {
+                  if (productToDelete) {
+                    console.log("Excluir produto ID:", productToDelete);
+                    closeModal();
+                  }
+                };
 
-<form asp-action="Perfil" asp-controller="Usuario" method="post" enctype="multipart/form-data">
+        <form asp-action="Perfil" asp-controller="Usuario" method="post" enctype="multipart/form-data">
 
-<div class="profile-container row">
+        <div class="profile-container row">
 
-    <!-- Sidebar de visualização -->
-    <div class="col-md-4 sidebar">
-        <div class="text-center">
-            @if (Model?.FotoPerfilUrl != null && Model?.FotoPerfilUrl.Length > 0)
-            {
-                <img id="FotoDePerfil" src="data:image/*;base64,@(Convert.ToBase64String(Model.FotoPerfilUrl))" class="profile-photo" alt="Profile Photo" />
-            }
-            else
-            {
-                <img id="FotoDePerfil" src="@Model?.FotoPerfilUrl" class="profile-photo" alt="Profile Photo" />
-            }
+            <!-- Sidebar de visualização -->
+            <div class="col-md-4 sidebar">
+                <div class="text-center">
+        @if (Model?.FotoPerfilUrl != null && Model?.FotoPerfilUrl.Length > 0)
+        {
+                            <img id="FotoDePerfil" src="data:image/*;base64,@(Convert.ToBase64String(Model.FotoPerfilUrl))" class="profile-photo" alt="Profile Photo" />
+        }
+        else
+        {
+                            <img id="FotoDePerfil" src="@Model?.FotoPerfilUrl" class="profile-photo" alt="Profile Photo" />
+        }
 
-            <!-- Novo formulário de upload -->
-            <form asp-action="AlterarImagem" asp-controller="Usuario" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="usuarioId" value="@Model?.Id" />
-                <div>
-                    <label for="formFile">Alterar foto de perfil:</label>
-                    <input type="file" id="formFile" name="formFile"
-                           accept=".png,.jpg,.jpeg,.gif,.tif"
-                           class="form-control"
-                           style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;" />
+                    <!-- Novo formulário de upload -->
+                    <form asp-action="AlterarImagem" asp-controller="Usuario" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="usuarioId" value="@Model?.Id" />
+                        <div>
+                            <label for="formFile">Alterar foto de perfil:</label>
+                            <input type="file" id="formFile" name="formFile"
+                                   accept=".png,.jpg,.jpeg,.gif,.tif"
+                                   class="form-control"
+                                   style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-primary">Enviar</button>
-            </form>
+
+                <h2>@Model?.Nome</h2>
+                <p>@Model?.Genero</p>
+                <p>@Model?.Cidade</p>
+                <p class="rating">⭐ @Model?.Rating</p>
+                <p>@Model?.DataNascimentoFormatada</p>
+
+                <div class="contact-info">
+                    <p>Telefone: <a href="tel:@Model?.Telefone">@Model?.Telefone</a></p>
+                    <p>E-mail: <a href="mailto:@Model?.Email">@Model?.Email</a></p>
+                </div>
+            </div>
+
+            <!-- Campos de edição -->
+            <div class="col-md-8">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="Nome"></label>
+                    <input asp-for="Nome" class="form-control" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Telefone"></label>
+                    <input asp-for="Telefone" class="form-control" />
+                    <span asp-validation-for="Telefone" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
         </div>
 
-        <h2>@Model?.Nome</h2>
-        <p>@Model?.Genero</p>
-        <p>@Model?.Cidade</p>
-        <p class="rating">⭐ @Model?.Rating</p>
-        <p>@Model?.DataNascimentoFormatada</p>
+        </form>
 
-        <div class="contact-info">
-            <p>Telefone: <a href="tel:@Model?.Telefone">@Model?.Telefone</a></p>
-            <p>E-mail: <a href="mailto:@Model?.Email">@Model?.Email</a></p>
-        </div>
-    </div>
+        <script>
 
-    <!-- Campos de edição -->
-    <div class="col-md-8">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            function AlterarImagem (){
+                    const imagem = document.getElementsByName('FotoDePerfil')[0].files[0];
 
-        <div class="form-group">
-            <label asp-for="Nome"></label>
-            <input asp-for="Nome" class="form-control" />
-            <span asp-validation-for="Nome" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Telefone"></label>
-            <input asp-for="Telefone" class="form-control" />
-            <span asp-validation-for="Telefone" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Salvar</button>
-    </div>
-</div>
-
-</form>
-
-<script>
-
-	function AlterarImagem (){
-			const imagem = document.getElementsByName('FotoDePerfil')[0].files[0];
-
-		document.getElementById('FotoDePerfil').src = window.URL.createObjectURL(imagem)
+                document.getElementById('FotoDePerfil').src = window.URL.createObjectURL(imagem)
 
 
 
-		// Cria um FormData para enviar a imagem e o ID
-		const formData = new FormData();
-		formData.append('id', '34');            // Adiciona o ID
-		formData.append('imagem', imagem);    // Adiciona a imagem
+                // Cria um FormData para enviar a imagem e o ID
+                const formData = new FormData();
+                formData.append('id', '34');            // Adiciona o ID
+                formData.append('imagem', imagem);    // Adiciona a imagem
 
-		// Realiza o fetch para o endpoint
-		fetch('./AlterarImagem', {
-			method: 'POST',                // Envio de dados via POST
-			body: formData,                // Envia o FormData com os dados
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Erro ao enviar a imagem');
-			}
-			return response.json();  // Supondo que o backend retorne um JSON
-		})
-		.then(data => {
-			console.log('Imagem alterada com sucesso:', data);
-			// Aqui você pode manipular a resposta de sucesso
-		})
-		.catch(error => {
-			console.error('Erro:', error);
-			// Aqui você pode tratar os erros
-		});
-	}
-</script>
-<form>
-	<div class="form-group">
-		<label asp-for="Telefone"></label>
-		<input asp-for="Telefone" class="form-control" />
-		<span asp-validation-for="Telefone" class="text-danger"></span>
-	</div>
-
-	<button type="submit" class="btn btn-primary">Salvar</button>
-</form>>
-
-        renderProducts();
+                // Realiza o fetch para o endpoint
+                fetch('./AlterarImagem', {
+                    method: 'POST',                // Envio de dados via POST
+                    body: formData,                // Envia o FormData com os dados
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao enviar a imagem');
+                    }
+                    return response.json();  // Supondo que o backend retorne um JSON
+                })
+                .then(data => {
+                    console.log('Imagem alterada com sucesso:', data);
+                    // Aqui você pode manipular a resposta de sucesso
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    // Aqui você pode tratar os erros
+                });
+            }
     </script>
+    <form>
+    </form>
 </body>
 </html>

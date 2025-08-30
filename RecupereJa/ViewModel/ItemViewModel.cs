@@ -8,9 +8,9 @@ namespace RecupereJa.ViewModel
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O título é obrigatório")]
-        [StringLength(100, ErrorMessage = "O título deve ter no máximo 100 caracteres")]
+        [StringLength(150, ErrorMessage = "O título deve ter no máximo 150 caracteres")]
         [Display(Name = "Título")]
-        public string Titulo { get; set; }
+        public string Titulo { get; set; } = string.Empty;
 
         [StringLength(500, ErrorMessage = "A descrição deve ter no máximo 500 caracteres")]
         [Display(Name = "Descrição")]
@@ -18,50 +18,42 @@ namespace RecupereJa.ViewModel
 
         [Required(ErrorMessage = "A data é obrigatória")]
         [Display(Name = "Data que foi encontrado")]
-        public string DataEncontrado { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-ddTHH:mm}")]
+        public DateTime? DataEncontrado { get; set; }
 
         [Display(Name = "Está com o dono?")]
         public bool Status { get; set; }
 
         public bool TemDescricao => !string.IsNullOrEmpty(Descricao);
 
-        public static explicit operator Item(ItemViewModel viewModel)
+        // VM -> Model
+        public static explicit operator Item(ItemViewModel vm)
         {
-            if (viewModel == null) return null;
+            if (vm == null) return null;
 
-            var item = new Item
+            return new Item
             {
-                Id = viewModel.Id,
-                Titulo = viewModel.Titulo,
-                Descricao = viewModel.Descricao,
-                Status = viewModel.Status
+                Id = vm.Id,
+                Titulo = vm.Titulo,
+                Descricao = vm.Descricao,
+                Status = vm.Status,
+                DataEncontrado = vm.DataEncontrado
             };
-
-            if (DateTime.TryParseExact(viewModel.DataEncontrado, "dd/MM/yyyy HH:mm",
-                                       null, System.Globalization.DateTimeStyles.None,
-                                       out DateTime dataEncontrado))
-            {
-                item.DataEncontrado = dataEncontrado;
-            }
-            else
-            {
-                item.DataEncontrado = DateTime.Now;
-            }
-
-            return item;
         }
 
-        public static ItemViewModel FromItem(Item item)
+        // Model -> VM
+        public static ItemViewModel FromItem(Item i)
         {
-            if (item == null) return null;
+            if (i == null) return null;
 
             return new ItemViewModel
             {
-                Id = item.Id,
-                Titulo = item.Titulo,
-                Descricao = item.Descricao,
-                DataEncontrado = item.DataEncontrado?.ToString("dd/MM/yyyy HH:mm") ?? string.Empty,
-                Status = item.Status
+                Id = i.Id,
+                Titulo = i.Titulo,
+                Descricao = i.Descricao,
+                DataEncontrado = i.DataEncontrado,
+                Status = i.Status
             };
         }
     }

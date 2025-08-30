@@ -12,8 +12,8 @@ using RecupereJa.Data;
 namespace RecupereJa.Migrations
 {
     [DbContext(typeof(RecupereJaContext))]
-    [Migration("20250828220424_initial-migration")]
-    partial class initialmigration
+    [Migration("20250829004857_Item")]
+    partial class Item
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

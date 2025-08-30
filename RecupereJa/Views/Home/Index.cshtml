@@ -1,5 +1,6 @@
 ﻿@model List<RecupereJa.ViewModel.ItemViewModel>
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -90,8 +91,12 @@
                     background-color: #f2f2f2;
                 }
 
+        /* Melhorando a visibilidade do menu suspenso */
         .dropdown:hover .dropdown-content {
             display: block;
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.2s ease-in-out;
         }
 
         main {
@@ -167,16 +172,18 @@
     <header>
         <h1 class="TituloEmpresa">Recupere Já</h1>
         <nav>
+            <!-- Menu Dropdown -->
             <div class="dropdown">
-                <a class="menu-btn"><i class="fa-solid fa-user"></i></a>
+                <a class="menu-btn"><i class="fa-solid fa-user"></i> Usuário</a>
                 <div class="dropdown-content">
-                    <a href="Login.cshtml">Entrar</a>
-                    <a href="Registrar.cshtml">Cadastrar-se</a>
-                    <a href="Perfil.cshtml">Conta</a>
-                    <a href="Create.cshtml">Cadastrar um produto</a>
+                    <!-- Alterando links para usar Tag Helpers -->
+                    <a asp-controller="Usuario" asp-action="Login">Entrar</a>
+                    <a asp-controller="Usuario" asp-action="Registrar">Registrar</a>
+                    <a asp-controller="Usuario" asp-action="Perfil">Perfil</a>
+                    <a asp-controller="Item" asp-action="Create">Cadastrar um produto</a>
                 </div>
             </div>
-            <a class="menu-btn" href="Sac.cshtml"><i class="fa-solid fa-headset"></i></a>
+            <a class="menu-btn" href="/Sac"><i class="fa-solid fa-headset"></i> SAC</a>
         </nav>
     </header>
 
@@ -186,7 +193,7 @@
         <!-- Container para cards dinâmicos -->
         <div class="cards-container" id="cardsContainer">
             <!-- Exemplo de card clicável com todos os dados -->
-            <a href="detalhesProduto.html" class="card">
+            <a href="Details.cshtml" class="card">
                 <img src="produto.jpg" alt="Produto">
                 <h3>Nome do Produto</h3>
                 <p>Descrição do produto</p>
@@ -196,10 +203,6 @@
             <!-- O backend C# vai gerar mais cards dinamicamente aqui -->
         </div>
     </main>
-
-    <footer>
-        &copy; 2025 Recupere Já. Todos os direitos reservados.
-    </footer>
 
     <script>
         // Exemplo de uso de arrow function: manipulação ao carregar a página
