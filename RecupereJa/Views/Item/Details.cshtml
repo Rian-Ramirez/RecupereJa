@@ -10,7 +10,10 @@
     <h4>@Model.Titulo</h4>
     <p><strong>Descrição:</strong> @Model.Descricao</p>
     <p><strong>Data encontrado:</strong> @Model.DataEncontrado?.ToString("dd/MM/yyyy HH:mm")</p>
-    <p><strong>Status:</strong> @(Model.Status ? "Com dono" : "Perdido")</p>
+    <p>
+        <strong>Status:</strong>
+        @(Model.Status == RecupereJa.Enums.ItemStatusEnum.Encontrado ? "Com dono" : "Perdido")
+    </p>
 </div>
 
 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>

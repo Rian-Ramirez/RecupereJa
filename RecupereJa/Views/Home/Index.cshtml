@@ -1,214 +1,56 @@
-﻿@model List<RecupereJa.ViewModel.ItemViewModel>
+﻿@model IEnumerable<RecupereJa.ViewModel.ItemViewModel>
 
+@{
+    ViewData["Title"] = "Home - RecupereJá";
+}
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Recupere Já</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
-        }
+<!-- HEADER -->
+<header class="bg-warning p-3 shadow-sm sticky-top">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="/" class="navbar-brand fw-bold text-dark fs-4">RecupereJá</a>
 
-        header {
-            background-color: #0066cc;
-            color: white;
-            padding: 10px 20px;
-            width: 100%;
-            height: 70px;
-            position: relative;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            box-sizing: border-box;
-        }
+        <form class="d-flex w-50">
+            <input class="form-control me-2" type="search" placeholder="Buscar itens perdidos ou encontrados..." aria-label="Search">
+            <button class="btn btn-dark" type="submit">Buscar</button>
+        </form>
 
-            header h1 {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-                margin: 0;
-                font-size: 26px;
-            }
+        <div class="d-flex gap-3">
+            <a href="/Usuario/Login" class="text-dark text-decoration-none">Login</a>
+            <a href="/Usuario/Perfil" class="text-dark text-decoration-none">Minha conta</a>
+            <a href="/Item" class="text-dark text-decoration-none">Meus itens</a>
+        </div>
+    </div>
+</header>
 
-        nav {
-            display: flex;
-            gap: 8px;
-            font-size: 12px;
-        }
+<!-- ITENS RECENTES -->
+<section class="container my-5">
+    <h4 class="fw-bold mb-4">Itens cadastrados</h4>
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-6 col-md-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="@item.ImagemUrl" class="card-img-top" alt="@item.Titulo">
+                    <div class="card-body">
+                        <h6 class="card-title">@item.Titulo</h6>
 
-        .menu-btn {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border: 2px solid white;
-            border-radius: 5px;
-            background-color: #379bff;
-            width: 60px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            font-size: 13px;
-        }
+                        @if (item.Status == RecupereJa.Enums.ItemStatusEnum.Perdido)
+                        {
+                            <span class="badge bg-danger">Perdido</span>
+                        }
+                        else if (item.Status == RecupereJa.Enums.ItemStatusEnum.Encontrado)
+                        {
+                            <span class="badge bg-success">Encontrado</span>
+                        }
 
-            .menu-btn:hover {
-                background-color: white;
-                color: #0066cc;
-            }
-
-        /* Dropdown */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            min-width: 140px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 5px;
-        }
-
-            .dropdown-content a {
-                padding: 10px 15px;
-                display: block;
-                text-decoration: none;
-                color: #333;
-                font-weight: normal;
-            }
-
-                .dropdown-content a:hover {
-                    background-color: #f2f2f2;
-                }
-
-        /* Melhorando a visibilidade do menu suspenso */
-        .dropdown:hover .dropdown-content {
-            display: block;
-            visibility: visible;
-            opacity: 1;
-            transition: opacity 0.2s ease-in-out;
-        }
-
-        main {
-            padding: 60px 20px 80px;
-            text-align: center;
-        }
-
-            main h2 {
-                font-size: 24px;
-                margin-top: 0;
-            }
-
-        /* Container dos cards */
-        .cards-container {
-            margin-top: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        /* Cards clicáveis */
-        .card {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            padding: 15px;
-            text-align: left;
-            transition: transform 0.2s;
-        }
-
-            .card:hover {
-                transform: translateY(-3px);
-            }
-
-            .card img {
-                width: 100%;
-                height: 160px;
-                object-fit: cover;
-                border-radius: 6px;
-                margin-bottom: 10px;
-            }
-
-            .card h3 {
-                margin: 5px 0;
-                font-size: 18px;
-            }
-
-            .card p {
-                margin: 3px 0;
-                font-size: 14px;
-                color: #555;
-            }
-
-            .card .info {
-                font-size: 13px;
-                color: #777;
-            }
-
-        footer {
-            background-color: #0066cc;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            width: 100%;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1 class="TituloEmpresa">Recupere Já</h1>
-        <nav>
-            <!-- Menu Dropdown -->
-            <div class="dropdown">
-                <a class="menu-btn"><i class="fa-solid fa-user"></i> Usuário</a>
-                <div class="dropdown-content">
-                    <!-- Alterando links para usar Tag Helpers -->
-                    <a asp-controller="Usuario" asp-action="Login">Entrar</a>
-                    <a asp-controller="Usuario" asp-action="Registrar">Registrar</a>
-                    <a asp-controller="Usuario" asp-action="Perfil">Perfil</a>
-                    <a asp-controller="Item" asp-action="Create">Cadastrar um produto</a>
+                        <a href="/Item/Details/@item.Id" class="btn btn-warning w-100 mt-2">Visualizar</a>
+                    </div>
                 </div>
             </div>
-            <a class="menu-btn" href="/Sac"><i class="fa-solid fa-headset"></i> SAC</a>
-        </nav>
-    </header>
+        }
+    </div>
+</section>
 
-    <main>
-        <h2>Bem-vindo à Recupere Já!</h2>
-
-        <!-- Container para cards dinâmicos -->
-        <div class="cards-container" id="cardsContainer">
-            <!-- Exemplo de card clicável com todos os dados -->
-            <a href="Details.cshtml" class="card">
-                <img src="produto.jpg" alt="Produto">
-                <h3>Nome do Produto</h3>
-                <p>Descrição do produto</p>
-                <p class="info">Encontrado em: São Paulo</p>
-                <p class="info">Data: 01/09/2025 10:00</p>
-            </a>
-            <!-- O backend C# vai gerar mais cards dinamicamente aqui -->
-        </div>
-    </main>
-
-    <script>
-        // Exemplo de uso de arrow function: manipulação ao carregar a página
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("Página carregada e pronta 🚀");
-        });
-    </script>
-</body>
-</html>
+<footer class="bg-dark text-light text-center p-4 mt-5">
+    <p class="mb-0">&copy; @DateTime.Now.Year - RecupereJá. Todos os direitos reservados.</p>
+</footer>

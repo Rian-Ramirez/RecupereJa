@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RecupereJa.Enums;
 
 namespace RecupereJa.Models
 {
@@ -8,28 +9,27 @@ namespace RecupereJa.Models
         [Key]
         public int Id { get; set; }
 
+        [Required]
+        [MaxLength(150)]
+        public string Titulo { get; set; } = string.Empty;
+
         public string? Descricao { get; set; }
 
-        [ForeignKey(nameof(Usuario))] //Não colocar acento em usuário, vai quebrar
+        [ForeignKey(nameof(Usuario))]
         public int IdUsuario { get; set; }
-
         public Usuario Usuario { get; set; } = null!;
 
         public bool Aprovado { get; set; } = false;
 
-        public bool Status { get; set; } = false;
+        [Required]
+        public ItemStatusEnum Status { get; set; } = ItemStatusEnum.Perdido;
 
         public bool Ativo { get; set; } = true;
 
         public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
 
-        [Required]
-        [MaxLength(150)]
-        public string Titulo { get; set; } = string.Empty;
-
         public DateTime? DataEncontrado { get; set; }
 
-        public string? ImagemUrl { get; set; } // 🔹 Adicionado para o ViewModel e Razor
-
+        public string? ImagemUrl { get; set; }
     }
 }
