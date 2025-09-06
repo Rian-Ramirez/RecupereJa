@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using RecupereJa.Models;
+using RecupereJa.Enums;
 
 namespace RecupereJa.ViewModel
 {
@@ -22,18 +23,22 @@ namespace RecupereJa.ViewModel
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-ddTHH:mm}")]
         public DateTime? DataEncontrado { get; set; }
 
-        [Display(Name = "Está com o dono?")]
-        public bool Status { get; set; }
+        [Display(Name = "Status do item")]
+        [Required(ErrorMessage = "O status é obrigatório")]
+        public ItemStatusEnum Status { get; set; } = ItemStatusEnum.Perdido;
 
         [Display(Name = "Imagem")]
         public string? ImagemUrl { get; set; }
 
+        [Display(Name = "Usuário que cadastrou")]
+        public int IdUsuario { get; set; }
+
         public bool TemDescricao => !string.IsNullOrEmpty(Descricao);
 
-        // VM -> Model
-        public static explicit operator Item(ItemViewModel vm)
+        // Conversão de ViewModel para o Model
+        public static explicit operator Item(ItemViewModel? vm)
         {
-            if (vm == null) return null;
+            if (vm == null) return null!;
 
             return new Item
             {
@@ -42,14 +47,18 @@ namespace RecupereJa.ViewModel
                 Descricao = vm.Descricao,
                 Status = vm.Status,
                 DataEncontrado = vm.DataEncontrado,
-                ImagemUrl = vm.ImagemUrl
+                ImagemUrl = vm.ImagemUrl,
+                IdUsuario = vm.IdUsuario,
+                DataCriacao = DateTime.UtcNow, 
+                Ativo = true,                  
+                Aprovado = false               
             };
         }
 
-        // Model -> VM
-        public static ItemViewModel FromItem(Item i)
+        // Conversão de Model  para o ViewModel
+        public static ItemViewModel FromItem(Item? i)
         {
-            if (i == null) return null;
+            if (i == null) return null!; 
 
             return new ItemViewModel
             {
@@ -58,7 +67,8 @@ namespace RecupereJa.ViewModel
                 Descricao = i.Descricao,
                 DataEncontrado = i.DataEncontrado,
                 Status = i.Status,
-                ImagemUrl = i.ImagemUrl
+                ImagemUrl = i.ImagemUrl,
+                IdUsuario = i.IdUsuario
             };
         }
     }
