@@ -1,4 +1,5 @@
-﻿@model RecupereJa.ViewModel.PerfilUsuarioViewModel
+﻿@using RecupereJa.Enums
+@model RecupereJa.ViewModel.PerfilUsuarioViewModel
 
 @{
     Layout = null;
@@ -177,7 +178,10 @@
                                 <img src="https://via.placeholder.com/300x140.png?text=Item+@item.Id" alt="Imagem do item">
                                 <h4>@item.Titulo</h4>
                                 <p>@(item.Descricao ?? "Sem descrição")</p>
-                                <p><strong>Status:</strong> @(item.Status ? "Resolvido" : "Pendente")</p>
+                                <p>
+                                    <strong>Status:</strong>
+                                    @(item.Status == ItemStatusEnum.Encontrado ? "Resolvido" : "Pendente")
+                                </p>
                                 <p><strong>Data:</strong> @item.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy")</p>
                                 <a class="btn btn-primary" href="/Item/Details/@item.Id">Ver Detalhes</a>
                             </div>

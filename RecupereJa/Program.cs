@@ -7,13 +7,13 @@ using RecupereJa.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configura��o do DbContext com Pomelo MySQL
+// Configuração do DbContext com Pomelo MySQL
 builder.Services.AddDbContext<RecupereJaContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     new MySqlServerVersion(new Version(8, 0, 39)))
 );
 
-// Inje��es de depend�ncia
+// Injeções de dependência
 builder.Services.AddScoped<IItemRepositorio, ItemRepositorio>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<IItemService, ItemService>();
@@ -29,10 +29,26 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     });
 
+// ✅ Configuração da sessão
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// ✅ Controllers + Views
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-if (!app.Environment.IsDevelopment())
+
+// ✅ Ativa página de erro detalhado em desenvolvimento
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
@@ -40,7 +56,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
+
+// ✅ Middleware da sessão precisa estar antes de Auth/Authorization
+app.UseSession();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
