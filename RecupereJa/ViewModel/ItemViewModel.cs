@@ -25,6 +25,9 @@ namespace RecupereJa.ViewModel
         [Display(Name = "Está com o dono?")]
         public bool Status { get; set; }
 
+        [Display(Name = "Imagem")]
+        public string? ImagemUrl { get; set; }
+
         public bool TemDescricao => !string.IsNullOrEmpty(Descricao);
 
         // VM -> Model
@@ -38,7 +41,8 @@ namespace RecupereJa.ViewModel
                 Titulo = vm.Titulo,
                 Descricao = vm.Descricao,
                 Status = vm.Status,
-                DataEncontrado = vm.DataEncontrado
+                DataEncontrado = vm.DataEncontrado,
+                ImagemUrl = vm.ImagemUrl
             };
         }
 
@@ -53,7 +57,8 @@ namespace RecupereJa.ViewModel
                 Titulo = i.Titulo,
                 Descricao = i.Descricao,
                 DataEncontrado = i.DataEncontrado,
-                Status = i.Status
+                Status = i.Status,
+                ImagemUrl = i.ImagemUrl
             };
         }
     }

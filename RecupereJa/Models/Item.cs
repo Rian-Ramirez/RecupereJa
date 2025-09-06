@@ -28,5 +28,8 @@ namespace RecupereJa.Models
         public string Titulo { get; set; } = string.Empty;
 
         public DateTime? DataEncontrado { get; set; }
+
+        public string? ImagemUrl { get; set; } // 🔹 Adicionado para o ViewModel e Razor
+
     }
 }
