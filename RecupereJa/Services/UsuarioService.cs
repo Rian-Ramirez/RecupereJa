@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using RecupereJa.Models;
 using RecupereJa.Repositorio;
-using RecupereJa.Repository;
-using RecupereJa.ViewModel;
 
 namespace RecupereJa.Services
 {
@@ -12,27 +10,35 @@ namespace RecupereJa.Services
         private readonly IUsuarioRepositorio _repo;
         public UsuarioService(IUsuarioRepositorio repo) => _repo = repo;
 
-
         public Task<Usuario?> BuscarPorIdAsync(int id) => _repo.BuscarPorIdAsync(id);
 
         public Task<List<Usuario>> BuscarTodosAsync() => _repo.BuscarTodosAsync();
-        
+
         public Task<Usuario> AtualizarAsync(Usuario entidade) => _repo.AtualizarAsync(entidade);
-        
+
         public Task<bool> DeletarAsync(int id) => _repo.DeletarAsync(id);
 
+        // Cria usuário
+        public Task<Usuario> CriarAsync(Usuario entidade) => _repo.CriarAsync(entidade);
+
+        // ✅ Autenticação ajustada: busca usuário pelo email ou identificador e valida senha com hash
         public async Task<Usuario?> AutenticarAsync(string identificadorOuEmail, string senhaEmTexto)
         {
-            // Ideal: senhaEmTexto -> Hash (ex.: BCrypt) e comparar Hash
-            var porEmail = await _repo.BuscarPorEmailSenhaAsync(identificadorOuEmail, senhaEmTexto);
-            if (porEmail != null) return porEmail;
-            return await _repo.BuscarPorIdentificadorSenhaAsync(identificadorOuEmail, senhaEmTexto);
-        }
+            // Busca usuário pelo email ou identificador
+            var user = await _repo.BuscarPorEmailAsync(identificadorOuEmail)
+                       ?? await _repo.BuscarPorIdentificadorAsync(identificadorOuEmail);
 
-        //public async Task<int> CriarAsync(Usuario usuario) => await _repo.CriarAsync(usuario);
-        Task<Usuario> ICRUD<Usuario>.CriarAsync(Usuario entidade) => _repo.CriarAsync(entidade);
+            if (user == null) return null;
+
+            // Valida a senha usando BCrypt
+            bool senhaValida = BCrypt.Net.BCrypt.Verify(senhaEmTexto, user.Senha);
+            if (!senhaValida) return null;
+
+            return user;
+        }
     }
 }
+
 
 
 

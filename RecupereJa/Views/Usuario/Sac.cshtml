@@ -214,6 +214,16 @@
 
                 <button type="submit">Enviar mensagem</button>
             </form>
+
+            @if (TempData["Sucesso"] != null)
+            {
+                <p style="color:green">@TempData["Sucesso"]</p>
+            }
+
+            @if (TempData["Erro"] != null)
+            {
+                <p style="color:red">@TempData["Erro"]</p>
+            }
         </div>
     </div>
 

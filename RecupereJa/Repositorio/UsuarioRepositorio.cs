@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using RecupereJa.Data;
 using RecupereJa.Models;
 using RecupereJa.Repositorio;
-using RecupereJa.Repository;
-using RecupereJa.ViewModel;
 
 namespace RecupereJa.Repositorio
 {
@@ -44,18 +42,20 @@ namespace RecupereJa.Repositorio
             return true;
         }
 
-        public async Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senhaHashOuTexto)
+        // Busca usuário pelo email
+        public async Task<Usuario?> BuscarPorEmailAsync(string email)
         {
             return await _ctx.Set<Usuario>()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senhaHashOuTexto);
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<Usuario?> BuscarPorIdentificadorSenhaAsync(string identificador, string senhaHashOuTexto)
+        // Busca usuário pelo identificador
+        public async Task<Usuario?> BuscarPorIdentificadorAsync(string identificador)
         {
             return await _ctx.Set<Usuario>()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Identificador == identificador && u.Senha == senhaHashOuTexto);
+                .FirstOrDefaultAsync(u => u.Identificador == identificador);
         }
     }
 }
