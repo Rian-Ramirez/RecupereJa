@@ -1,12 +1,18 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using RecupereJa.Data;
 using RecupereJa.Models;
 using RecupereJa.Services;
 using RecupereJa.ViewModel;
+using System.Security.Claims;
+using MimeKit;
+using MailKit.Net.Smtp;
+using System.IO;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace RecupereJa.Controllers
 {
@@ -14,12 +20,17 @@ namespace RecupereJa.Controllers
     {
         private readonly RecupereJaContext _context;
         private readonly IUsuarioService _usuarios;
+        private readonly IConfiguration _config;
 
-        public UsuarioController(RecupereJaContext context, IUsuarioService usuarios)
+        // 🔹 Injeção do contexto, serviço de usuários e configuração
+        public UsuarioController(RecupereJaContext context, IUsuarioService usuarios, IConfiguration config)
         {
             _context = context;
             _usuarios = usuarios;
+            _config = config;
         }
+
+        #region Login / Logout
 
         [HttpGet]
         [AllowAnonymous]
@@ -66,6 +77,10 @@ namespace RecupereJa.Controllers
             return RedirectToAction("Login");
         }
 
+        #endregion
+
+        #region Registro
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Registrar() => View();
@@ -91,7 +106,7 @@ namespace RecupereJa.Controllers
                 dto.FotoUsuarioMimeType = foto.ContentType;
             }
 
-            dto.Senha = BCrypt.Net.BCrypt.HashPassword(dto.Senha); // hash da senha
+            dto.Senha = BCrypt.Net.BCrypt.HashPassword(dto.Senha);
 
             var created = await _usuarios.CriarAsync(dto);
             if (created?.Id > 0) return RedirectToAction(nameof(Login));
@@ -99,6 +114,10 @@ namespace RecupereJa.Controllers
             ModelState.AddModelError(string.Empty, "Falha ao registrar usuário.");
             return View(dto);
         }
+
+        #endregion
+
+        #region Perfil do usuário
 
         private int? ObterUsuarioLogadoId()
         {
@@ -157,5 +176,66 @@ namespace RecupereJa.Controllers
 
             return Json(new { sucesso = true });
         }
+
+        #endregion
+
+        #region SAC / Fale Conosco
+
+        // 🔹 GET: Exibe a página do SAC
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Sac()
+        {
+            return View(); // exibe sac.cshtml
+        }
+
+        // 🔹 POST: Envia a mensagem via e-mail
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Sac(string nome, string email, string assunto, string mensagem)
+        {
+            if (string.IsNullOrWhiteSpace(nome) || string.IsNullOrWhiteSpace(email) ||
+                string.IsNullOrWhiteSpace(assunto) || string.IsNullOrWhiteSpace(mensagem))
+            {
+                TempData["Erro"] = "Preencha todos os campos corretamente.";
+                return RedirectToAction("Sac");
+            }
+
+            try
+            {
+                var smtpServer = _config["EmailSettings:SmtpServer"];
+                var port = int.Parse(_config["EmailSettings:Port"]);
+                var user = _config["EmailSettings:User"];
+                var password = _config["EmailSettings:Password"];
+                var toEmail = _config["EmailSettings:ToEmail"];
+
+                var emailMsg = new MimeMessage();
+                emailMsg.From.Add(new MailboxAddress(nome, email));
+                emailMsg.To.Add(new MailboxAddress("SAC", toEmail));
+                emailMsg.Subject = $"[SAC] {assunto}";
+                emailMsg.Body = new TextPart("plain")
+                {
+                    Text = $"Nome: {nome}\nE-mail: {email}\nAssunto: {assunto}\n\nMensagem:\n{mensagem}"
+                };
+
+                using (var smtp = new SmtpClient())
+                {
+                    await smtp.ConnectAsync(smtpServer, port, MailKit.Security.SecureSocketOptions.StartTls);
+                    await smtp.AuthenticateAsync(user, password);
+                    await smtp.SendAsync(emailMsg);
+                    await smtp.DisconnectAsync(true);
+                }
+
+                TempData["Sucesso"] = "Mensagem enviada com sucesso!";
+            }
+            catch (System.Exception ex)
+            {
+                TempData["Erro"] = "Erro ao enviar mensagem: " + ex.Message;
+            }
+
+            return RedirectToAction("Sac");
+        }
+
+        #endregion
     }
 }
