@@ -2,188 +2,38 @@
 @model RecupereJa.ViewModel.PerfilUsuarioViewModel
 
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <title>Perfil - Recupere Já</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(to bottom right, #d0eaff, #0077cc);
-        }
-
-        .wrapper {
-            display: flex;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            max-width: 1000px;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-            header h2 {
-                margin: 0;
-                color: #0066cc;
-            }
-
-        .profile-section {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            max-width: 600px;
-            margin: 0 auto 30px auto;
-            gap: 30px;
-            padding: 0 10px;
-        }
-
-        .profile-pic {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #0066cc;
-            position: relative;
-            left: -50px;
-        }
-
-        .profile-info {
-            flex: 1;
-        }
-
-            .profile-info p {
-                margin: 6px 0;
-                font-size: 1em;
-            }
-
-        .products-section {
-            margin-top: 20px;
-        }
-
-            .products-section h3 {
-                margin-bottom: 15px;
-                color: #0066cc;
-            }
-
-        .no-products {
-            font-size: 1em;
-            color: #555;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            position: relative;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-        }
-
-            .product-card img {
-                width: 100%;
-                height: 140px;
-                object-fit: cover;
-                border-radius: 8px;
-                margin-bottom: 10px;
-            }
-
-            .product-card h4 {
-                margin: 5px 0;
-                font-size: 1em;
-                color: #333;
-            }
-
-        .delete-icon {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: red;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-        }
-
-        .modal-buttons {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-around;
-        }
-
-            .modal-buttons button {
-                padding: 10px 20px;
-                border: none;
-                border-radius: 6px;
-                cursor: pointer;
-                font-size: 1em;
-            }
-
-            .modal-buttons .yes {
-                background: red;
-                color: white;
-            }
-
-            .modal-buttons .no {
-                background: #ccc;
-            }
-    </style>
+    <link rel="stylesheet" href="~/css/perfil.css" />
 </head>
+
 <body>
+
+    <header class="bg-warning p-3 shadow-sm sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="navbar-brand fw-bold text-dark fs-4">RecupereJá</a>
+
+            <form class="d-flex w-50">
+                <input class="form-control me-2" type="search" placeholder="Buscar itens perdidos ou encontrados..." aria-label="Search">
+                <button class="btn btn-dark" type="submit">Buscar</button>
+            </form>
+
+            <div class="d-flex gap-3">
+                <a href="/Usuario/Login" class="text-dark text-decoration-none">Login</a>
+                <a href="/Usuario/Perfil" class="text-dark text-decoration-none">Minha conta</a>
+                <a href="/Item" class="text-dark text-decoration-none">Meus itens</a>
+            </div>
+        </div>
+    </header>
+
     <div class="wrapper">
         <div class="container">
             <header>
@@ -245,6 +95,12 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Rodapé bonitinho -->
+@*     <footer class="bg-dark text-light text-center p-4">
+        <p class="mb-0">&copy; @DateTime.Now.Year - RecupereJá. Todos os direitos reservados.</p>
+    </footer> *@
 
     <script>
                 let productToDelete = null;

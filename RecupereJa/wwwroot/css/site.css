@@ -1,22 +1,46 @@
+/* Tamanhos base (opcional) */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+/* Sticky footer com CSS Grid */
+html, body {
+    height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* header | conteúdo | footer */
+}
+
+/* A sua área de conteúdo (wrapper/main) ocupa o miolo */
+.wrapper {
+    min-height: 100%;
+}
+
+/* Acessibilidade/estados (mantive) */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* Footer (opcional) */
+footer {
+    width: 100%;
+    position:sticky;
+} /* garante largura total */
+
+.my-5 {
+    height: 72.5vh;
 }
