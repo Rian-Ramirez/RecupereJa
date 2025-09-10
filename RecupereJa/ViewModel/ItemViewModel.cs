@@ -1,5 +1,6 @@
 ﻿using RecupereJa.Enums;
 using RecupereJa.Models;
+using RecupereJa.Enums;
 
 namespace RecupereJa.ViewModel
 {
@@ -14,7 +15,18 @@ namespace RecupereJa.ViewModel
         public bool Ativo { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataEncontrado { get; set; }
+
+        [Display(Name = "Status do item")]
+        [Required(ErrorMessage = "O status é obrigatório")]
+        public ItemStatusEnum Status { get; set; } = ItemStatusEnum.Perdido;
+
+        [Display(Name = "Imagem")]
         public string? ImagemUrl { get; set; }
+
+        [Display(Name = "Usuário que cadastrou")]
+        public int IdUsuario { get; set; }
+
+        public bool TemDescricao => !string.IsNullOrEmpty(Descricao);
 
         // Conversão de Item -> ItemViewModel
         public static ItemViewModel FromItem(Item item)
@@ -48,6 +60,27 @@ namespace RecupereJa.ViewModel
                 DataCriacao = vm.DataCriacao,
                 DataEncontrado = vm.DataEncontrado,
                 ImagemUrl = vm.ImagemUrl,
+                IdUsuario = vm.IdUsuario,
+                DataCriacao = DateTime.UtcNow, 
+                Ativo = true,                  
+                Aprovado = false               
+            };
+        }
+      
+        // Conversão de Model  para o ViewModel
+        public static ItemViewModel FromItem(Item? i)
+        {
+            if (i == null) return null!; 
+
+            return new ItemViewModel
+            {
+                Id = i.Id,
+                Titulo = i.Titulo,
+                Descricao = i.Descricao,
+                DataEncontrado = i.DataEncontrado,
+                Status = i.Status,
+                ImagemUrl = i.ImagemUrl,
+                IdUsuario = i.IdUsuario
                 // UsuarioId é preenchido no controller com ObterUsuarioLogadoId()
             };
         }

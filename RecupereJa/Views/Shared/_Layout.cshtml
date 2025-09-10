@@ -16,11 +16,9 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            © 2025 Recupere Já. Todos os direitos reservados. -
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    @* Rodapé, retirado por momento pois não fica na parte inferior da tela*@
+    <footer class="bg-dark text-light text-center p-4">
+        <p class="mb-0">&copy; @DateTime.Now.Year - RecupereJá. Todos os direitos reservados.</p>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

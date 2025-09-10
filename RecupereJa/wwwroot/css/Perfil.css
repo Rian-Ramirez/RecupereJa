@@ -1,0 +1,112 @@
+﻿/* Container principal do perfil */
+.wrapper {
+    min-height: 100vh; /* ocupa a altura total da tela */
+    display: flex;
+    flex-direction: column;
+    padding-top: 3%;
+}
+
+/* Box branco centralizado */
+.perfil-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 1000px;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+    /* Título */
+    .perfil-container h2 {
+        margin-bottom: 20px;
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+/* Foto e informações lado a lado */
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f0f0f0;
+}
+
+.profile-info p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Seção de itens */
+.products-section h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.no-products {
+    font-size: 1rem;
+    color: #666;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+/* Card de item */
+.product-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 15px;
+    text-align: center;
+    transition: box-shadow 0.2s ease;
+}
+
+    .product-card:hover {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .product-card h4 {
+        font-size: 1rem;
+        margin: 8px 0;
+        color: #333;
+    }
+
+    .product-card p {
+        font-size: 0.9rem;
+        color: #666;
+        margin: 5px 0;
+    }
+
+/* Container interno que cresce para preencher o espaço */
+.container {
+
+    flex: 1; /* faz com que o container cresça e empurre o footer para baixo */
+}
+
+.pb-3 {
+    height: 100%;
+}
