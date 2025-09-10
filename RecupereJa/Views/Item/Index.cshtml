@@ -3,7 +3,26 @@
 
 @{
     ViewData["Title"] = "Itens";
+    <link rel="stylesheet" href="~/css/ItemIndex.css" />
 }
+
+<header class="bg-warning p-3 shadow-sm sticky-top">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="/" class="navbar-brand fw-bold text-dark fs-4">RecupereJá</a>
+
+        <form class="d-flex w-50">
+            <input class="form-control me-2" type="search" placeholder="Buscar itens perdidos ou encontrados..." aria-label="Search">
+            <button class="btn btn-dark" type="submit">Buscar</button>
+        </form>
+
+        <div class="d-flex gap-3">
+            <a href="/Usuario/Login" class="text-dark text-decoration-none">Login</a>
+            <a href="/Usuario/Perfil" class="text-dark text-decoration-none">Minha conta</a>
+            <a href="/Item" class="text-dark text-decoration-none">Meus itens</a>
+            <a href="/Usuario/Sac" class="text-dark text-decoration-none">Sac</a>
+        </div>
+    </div>
+</header>
 
 <h2>Lista de Itens</h2>
 

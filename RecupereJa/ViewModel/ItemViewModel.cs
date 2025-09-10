@@ -1,6 +1,6 @@
 ﻿using RecupereJa.Enums;
 using RecupereJa.Models;
-using RecupereJa.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace RecupereJa.ViewModel
 {
@@ -11,7 +11,6 @@ namespace RecupereJa.ViewModel
         public string? Descricao { get; set; }
         public string UsuarioNome { get; set; } = string.Empty; // usado na View
         public bool Aprovado { get; set; }
-        public ItemStatusEnum Status { get; set; }
         public bool Ativo { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataEncontrado { get; set; }
@@ -61,28 +60,24 @@ namespace RecupereJa.ViewModel
                 DataEncontrado = vm.DataEncontrado,
                 ImagemUrl = vm.ImagemUrl,
                 IdUsuario = vm.IdUsuario,
-                DataCriacao = DateTime.UtcNow, 
-                Ativo = true,                  
-                Aprovado = false               
+                //DataCriacao = DateTime.UtcNow,           
             };
         }
-      
-        // Conversão de Model  para o ViewModel
-        public static ItemViewModel FromItem(Item? i)
-        {
-            if (i == null) return null!; 
 
-            return new ItemViewModel
-            {
-                Id = i.Id,
-                Titulo = i.Titulo,
-                Descricao = i.Descricao,
-                DataEncontrado = i.DataEncontrado,
-                Status = i.Status,
-                ImagemUrl = i.ImagemUrl,
-                IdUsuario = i.IdUsuario
-                // UsuarioId é preenchido no controller com ObterUsuarioLogadoId()
-            };
-        }
-    }
+        //// Conversão de Model  para o ViewModel
+        //public static ItemViewModel FromItem(Item? i)
+        //{
+        //    if (i == null) return null!; 
+
+        //    return new ItemViewModel
+        //    {
+        //        Id = i.Id,
+        //        Titulo = i.Titulo,
+        //        Descricao = i.Descricao,
+        //        DataEncontrado = i.DataEncontrado,
+        //        Status = i.Status,
+        //        ImagemUrl = i.ImagemUrl,
+        //        IdUsuario = i.IdUsuario
+        //        // UsuarioId é preenchido no controller com ObterUsuarioLogadoId()
+    };
 }
