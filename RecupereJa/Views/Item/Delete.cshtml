@@ -14,8 +14,42 @@
     <p>@Model.DataEncontrado?.ToString("dd/MM/yyyy HH:mm")</p>
 </div>
 
-<form asp-action="Delete">
+<form id="formDeletar" asp-action="Delete" method="post">
     <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Excluir</button>
+    <button id="btnExcluir" type="submit" class="btn btn-danger">Excluir</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>
+
+@section Scripts {
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const btnExcluir = document.getElementById("btnExcluir");
+            const formDeletar = document.getElementById("formDeletar");
+
+            if (btnExcluir && formDeletar) {
+                btnExcluir.addEventListener("click", (e) => {
+                    e.preventDefault(); // Bloqueia envio automático
+
+                    Swal.fire({
+                        title: 'Tem certeza?',
+                        text: "Essa ação não pode ser desfeita!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sim, excluir!',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Envia o formulário se o usuário confirmar
+                            formDeletar.submit();
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+}

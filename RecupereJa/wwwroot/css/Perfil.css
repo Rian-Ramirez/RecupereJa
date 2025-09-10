@@ -110,3 +110,23 @@
 .pb-3 {
     height: 100%;
 }
+
+/* Estilização do header fixo */
+header {
+    position: fixed; /* fixa o header */
+    top: 0; /* cola no topo */
+    left: 0;
+    width: 100%; /* ocupa toda a largura */
+    z-index: 1000; /* fica acima de outros elementos */
+    background: #fff; /* fundo branco */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* sombra suave */
+    height: 80px; /* define altura do header */
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+/* Dá espaço no conteúdo para não ficar atrás do header */
+main {
+    padding-top: 100px; /* deve ser maior ou igual à altura do header */
+}

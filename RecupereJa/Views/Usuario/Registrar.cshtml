@@ -98,6 +98,8 @@
                 background-color: #005f73;
             }
     </style>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="wrapper">
@@ -157,8 +159,18 @@
         document.addEventListener("DOMContentLoaded", () => {
             const btnCadastrar = document.getElementById("btnCadastrar");
             if (btnCadastrar) {
-                btnCadastrar.addEventListener("click", () => {
-                    alert("Você concluiu seu cadastro!");
+                btnCadastrar.addEventListener("click", (e) => {
+                    e.preventDefault(); // Evita envio imediato do formulário
+
+                    Swal.fire({
+                        title: 'Cadastro concluído!',
+                        text: 'Você registrou sua conta com sucesso.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Envia o formulário após o usuário fechar o alerta
+                        btnCadastrar.closest("form").submit();
+                    });
                 });
             }
         });

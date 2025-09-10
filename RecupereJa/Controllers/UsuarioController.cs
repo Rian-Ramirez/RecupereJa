@@ -66,7 +66,7 @@ namespace RecupereJa.Controllers
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
 
-            return RedirectToAction("Index", "Item");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

@@ -5,45 +5,176 @@
     ViewData["Title"] = "Cadastrar Item";
 }
 
-<h2>Cadastrar Item</h2>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="Titulo" class="control-label"></label>
-        <input asp-for="Titulo" class="form-control" />
-        <span asp-validation-for="Titulo" class="text-danger"></span>
-    </div>
+    <style>
+        /* === Reset básico === */
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
 
-    <div class="form-group">
-        <label asp-for="Descricao" class="control-label"></label>
-        <textarea asp-for="Descricao" class="form-control"></textarea>
-        <span asp-validation-for="Descricao" class="text-danger"></span>
-    </div>
+        /* === Layout Flex para manter footer no fim === */
+        body {
+            display: flex;
+            flex-direction: column;
+        }
 
-    <div class="form-group">
-        <label asp-for="DataEncontrado" class="control-label"></label>
-        <input asp-for="DataEncontrado" class="form-control" type="datetime-local" />
-        <span asp-validation-for="DataEncontrado" class="text-danger"></span>
-    </div>
+        main.wrapper {
+            flex: 1; /* ocupa todo o espaço disponível */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            height:92vh;
+        }
 
-    <div class="form-group">
-        <label asp-for="Status" class="control-label"></label>
-        <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<ItemStatusEnum>()"></select>
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
 
-    <!-- Upload da imagem -->
-    <div class="form-group">
-        <label for="imagem" class="control-label">Imagem</label>
-        <input type="file" name="imagem" class="form-control" accept="image/*" />
-    </div>
+        /* === Estilos que você enviou === */
 
-    <button type="submit" class="btn btn-primary">Salvar</button>
-    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
-</form>
+        /* Box branco centralizado */
+        .perfil-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 1000px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            .perfil-container h2 {
+                margin-bottom: 20px;
+                font-size: 1.4rem;
+                font-weight: bold;
+                color: #333;
+            }
+
+        /* Formulário */
+        .form-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 1rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            color: #fff;
+        }
+
+        .text-danger {
+            color: red;
+            font-size: 0.9rem;
+        }
+
+        .label{
+            border: solid 2px red;
+        }
+    </style>
+</head>
+<body>
+    <main class="wrapper">
+        <div class="perfil-container">
+            <h2>Cadastrar Item</h2>
+
+            <form id="formItem" asp-action="Create" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="Titulo" class="control-label"></label>
+                    <input asp-for="Titulo" class="form-control" />
+                    <span asp-validation-for="Titulo" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Descricao" class="control-label"></label>
+                    <textarea asp-for="Descricao" class="form-control"></textarea>
+                    <span asp-validation-for="Descricao" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DataEncontrado" class="control-label"></label>
+                    <input asp-for="DataEncontrado" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="DataEncontrado" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label"></label>
+                    <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<ItemStatusEnum>()"></select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="imagem" class="control-label">Imagem</label>
+                    <input type="file" name="imagem" class="form-control" accept="image/*" />
+                </div>
+
+                <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
+                <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        © 2025 Recupere Já - Todos os direitos reservados
+    </footer>
+
+    @section Scripts {
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const btnSalvar = document.getElementById("btnSalvar");
+                const formItem = document.getElementById("formItem");
+
+                if (btnSalvar && formItem) {
+                    btnSalvar.addEventListener("click", (e) => {
+                        e.preventDefault();
+
+                        Swal.fire({
+                            title: 'Item cadastrado!',
+                            text: 'O item foi registrado com sucesso no sistema.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            formItem.submit();
+                        });
+                    });
+                }
+            });
+        </script>
     }
-}
+</body>
+</html>

@@ -3,127 +3,212 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Perfil - Recupere Já";
 }
 
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!-- Estilos para layout e cards -->
+<style>
+    /* Perfil */
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>Perfil - Recupere Já</title>
-    <link rel="stylesheet" href="~/css/perfil.css" />
-</head>
+    /* Grid de itens */
+    .products-grid .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease-in-out;
+    }
 
-<body>
+        .products-grid .card:hover {
+            transform: translateY(-3px);
+        }
 
-    <header class="bg-warning p-3 shadow-sm sticky-top">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a href="/" class="navbar-brand fw-bold text-dark fs-4">RecupereJá</a>
+    /* Imagem do card */
+    .products-grid .card-img-top {
+        width: 100%;
+        height: 200px; /* altura fixa */
+        object-fit: contain; /* mantém a imagem inteira */
+        background-color: #f8f9fa; /* fundo neutro */
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
 
-            <form class="d-flex w-50">
-                <input class="form-control me-2" type="search" placeholder="Buscar itens perdidos ou encontrados..." aria-label="Search">
-                <button class="btn btn-dark" type="submit">Buscar</button>
-            </form>
+    /* Corpo do card */
+    .products-grid .card-body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+    }
 
-            <div class="d-flex gap-3">
-                <a href="/Usuario/Login" class="text-dark text-decoration-none">Login</a>
-                <a href="/Usuario/Perfil" class="text-dark text-decoration-none">Minha conta</a>
-                <a href="/Item" class="text-dark text-decoration-none">Meus itens</a>
-                <a href="/Usuario/Sac" class="text-dark text-decoration-none">Sac</a>
-            </div>
-        </div>
-    </header>
+    .products-grid .card-title {
+        font-weight: bold;
+        margin-bottom: .5rem;
+    }
 
-    <div class="wrapper">
-        <div class="container">
-            <header>
-                <h2><b>Meu Perfil</b></h2>
-            </header>
+    .products-grid .card-text {
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* limita 3 linhas */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 0.95rem;
+        color: #555;
+    }
 
-            <form id="formPerfil" enctype="multipart/form-data">
-                <input type="hidden" name="usuarioId" value="@Model.Usuario.Id" />
+    /* Lista dentro do card */
+    .products-grid .list-group-item {
+        font-size: 0.9rem;
+    }
 
-                <div class="profile-section">
-                    <img id="FotoDePerfil"
-                         src="@(
-                         Model.Usuario.FotoUsuario != null && Model.Usuario.FotoUsuario.Length > 0
-                         ? "data:image/png;base64," + Convert.ToBase64String(Model.Usuario.FotoUsuario)
-                         : "/images/users/default.png"
-                     )"
-                         class="profile-pic"
-                         alt="Foto de Perfil">
+    /* Rodapé do card */
+    .products-grid .card-footer {
+        background: #fff;
+        border-top: 1px solid #eee;
+    }
 
-                    <div class="profile-info">
-                        <div class="mb-3">
-                            <label>Nome Completo</label>
-                            <input type="text" name="nome" value="@Model.Usuario.Nome" required />
-                        </div>
-                        <div class="mb-3">
-                            <label>Email</label>
-                            <input type="email" name="email" value="@Model.Usuario.Email" required />
-                        </div>
-                        <div class="mb-3">
-                            <label>Telefone</label>
-                            <input type="text" name="telefone" value="@(Model.Usuario.Telefone ?? "")" />
-                        </div>
-                        <div class="mb-3">
-                            <label>Alterar Foto (PNG ou JPEG)</label>
-                            <input type="file" name="formFile" accept=".png,.jpg,.jpeg" onchange="previewImage(this)" />
-                        </div>
+        .products-grid .card-footer .btn {
+            border-radius: 8px;
+        }
+</style>
+
+<header class="bg-warning p-3 shadow-sm sticky-top">
+<div class="container d-flex justify-content-between align-items-center">
+    <a href="/" class="navbar-brand fw-bold text-dark fs-4">RecupereJá</a>
+
+    <form class="d-flex w-50">
+        <input class="form-control me-2" type="search" placeholder="Buscar itens perdidos ou encontrados..." aria-label="Search">
+        <button class="btn btn-dark" type="submit">Buscar</button>
+    </form>
+
+    <div class="d-flex gap-3">
+        <a href="/Usuario/Login" class="text-dark text-decoration-none">Login</a>
+        <a href="/Usuario/Perfil" class="text-dark text-decoration-none">Minha conta</a>
+        <a href="/Item" class="text-dark text-decoration-none">Meus itens</a>
+        <a href="/Usuario/Sac" class="text-dark text-decoration-none">Sac</a>
+    </div>
+</div>
+</header>
+
+<div class="wrapper">
+    <div class="container perfil-container">
+        <h2><b>Meu Perfil</b></h2>
+
+        <form id="formPerfil" enctype="multipart/form-data">
+            <input type="hidden" name="usuarioId" value="@Model.Usuario.Id" />
+
+            <div class="profile-section d-flex align-items-start gap-4">
+                <!-- Foto de Perfil -->
+                <img id="FotoDePerfil"
+                     src="@(Model.Usuario.FotoUsuario != null && Model.Usuario.FotoUsuario.Length > 0
+                          ? "data:image/png;base64," + Convert.ToBase64String(Model.Usuario.FotoUsuario)
+                          : "/images/users/default.png")"
+                     class="profile-pic img-thumbnail"
+                     alt="Foto de Perfil" />
+
+                <!-- Informações -->
+                <div class="profile-info flex-grow-1">
+                    <div class="mb-3">
+                        <label class="form-label">Nome Completo</label>
+                        <input type="text" name="nome" value="@Model.Usuario.Nome" class="form-control" required />
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" value="@Model.Usuario.Email" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Telefone</label>
+                        <input type="text" name="telefone" value="@(Model.Usuario.Telefone ?? "")" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Alterar Foto (PNG ou JPEG)</label>
+                        <input type="file" name="formFile" class="form-control" accept=".png,.jpg,.jpeg" onchange="previewImage(this)" />
+                    </div>
+
+                    <button type="button" class="btn btn-primary mt-2" onclick="salvarPerfil()">Salvar Alterações</button>
                 </div>
-
-                <button type="button" class="btn btn-primary" onclick="salvarPerfil()">Salvar Alterações</button>
-            </form>
-
-            <div class="products-section">
-                <h3>Meus Itens</h3>
-
-                @if (Model.Itens == null || !Model.Itens.Any())
-                {
-                    <div class="no-products">Você não tem nenhum item cadastrado.</div>
-                }
-                else
-                {
-                    <div class="products-grid">
-                        @foreach (var item in Model.Itens)
-                        {
-                            <div class="product-card">
-                                <img src="https://via.placeholder.com/300x140.png?text=Item+@item.Id" alt="Imagem do item">
-                                <h4>@item.Titulo</h4>
-                                <p>@(item.Descricao ?? "Sem descrição")</p>
-                                <p>
-                                    <strong>Status:</strong>
-                                    @(item.Status == ItemStatusEnum.Encontrado ? "Resolvido" : "Pendente")
-                                </p>
-                                <p><strong>Data:</strong> @item.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy")</p>
-                                <a class="btn btn-primary" href="/Item/Details/@item.Id">Ver Detalhes</a>
-                            </div>
-                        }
-                    </div>
-                }
             </div>
+        </form>
+
+        <!-- Seção de Itens -->
+        <div class="products-section mt-4">
+            <h3>Meus Itens</h3>
+
+            @if (Model.Itens == null || !Model.Itens.Any())
+            {
+                <div class="alert alert-info text-center">Você não tem nenhum item cadastrado.</div>
+            }
+            else
+            {
+                <!-- Grid Bootstrap -->
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 products-grid">
+                    @foreach (var item in Model.Itens)
+                    {
+                        <div class="col">
+                            <div class="card h-100">
+                                <!-- Imagem -->
+                                <img src="@(string.IsNullOrEmpty(item.ImagemUrl)
+                                            ? "https://via.placeholder.com/300x200.png?text=Sem+Imagem"
+                                            : item.ImagemUrl)"
+                                     class="card-img-top"
+                                     alt="Imagem do item" />
+
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Titulo</h5>
+                                    <p class="card-text">
+                                        @((item.Descricao?.Length > 120 ? item.Descricao.Substring(0, 120) + "..." : item.Descricao) ?? "Sem descrição")
+                                    </p>
+                                </div>
+
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <strong>Status:</strong> @(item.Status == ItemStatusEnum.Encontrado ? "Resolvido" : "Pendente")
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Data:</strong> @item.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy")
+                                    </li>
+                                </ul>
+
+                                <div class="card-footer text-center">
+                                    <a class="btn btn-primary w-100" href="/Item/Details/@item.Id">Ver Detalhes</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
         </div>
     </div>
+</div>
 
+<!-- Rodapé -->
+<footer class="bg-dark text-light text-center p-4 mt-auto">
+    <p class="mb-0">&copy; @DateTime.Now.Year - RecupereJá. Todos os direitos reservados.</p>
+</footer>
 
-    <!-- Rodapé bonitinho -->
-@*     <footer class="bg-dark text-light text-center p-4">
-        <p class="mb-0">&copy; @DateTime.Now.Year - RecupereJá. Todos os direitos reservados.</p>
-    </footer> *@
-
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function previewImage(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
-                if (!['image/jpeg','image/png'].includes(file.type)) {
+                if (!['image/jpeg', 'image/png'].includes(file.type)) {
                     alert('Apenas imagens JPEG ou PNG são permitidas.');
                     input.value = '';
                     return;
                 }
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     document.getElementById('FotoDePerfil').src = e.target.result;
                 };
                 reader.readAsDataURL(file);
@@ -144,15 +229,13 @@
 
                 if (result.sucesso) {
                     Swal.fire("Perfil atualizado com sucesso!");
-
                 } else {
-                    alert('Erro: ' + result.mensagem);
+                    Swal.fire("Erro", result.mensagem, "error");
                 }
             } catch (error) {
                 console.error(error);
-                alert('Ocorreu um erro ao salvar o perfil.');
+                Swal.fire("Erro", "Ocorreu um erro ao salvar o perfil.", "error");
             }
         }
     </script>
-</body>
-</html>
+}

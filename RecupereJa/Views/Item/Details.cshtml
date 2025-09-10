@@ -1,42 +1,79 @@
 ﻿@model RecupereJa.ViewModel.ItemViewModel
-
 @{
     ViewData["Title"] = "Detalhes";
 }
+
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/ItemDetails.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .card img {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
+<body>
+    <main>
+        <h2>Detalhes do Item</h2>
 
-<h2>Detalhes do Item</h2>
+        <div class="card shadow p-4 mb-3">
+            <h4 class="card-title">@Model.Titulo</h4>
 
-<div class="card shadow p-4">
-    <h4 class="card-title">@Model.Titulo</h4>
+            @if (!string.IsNullOrEmpty(Model.ImagemUrl))
+            {
+                <div class="mb-3">
+                    <img src="@Model.ImagemUrl" alt="Imagem do item" class="img-fluid rounded" />
+                </div>
+            }
 
-    @if (!string.IsNullOrEmpty(Model.ImagemUrl))
-    {
-        <div class="mb-3">
-            <img src="@Model.ImagemUrl" alt="Imagem do item" class="img-fluid rounded" style="max-width:300px;" />
+            <p><strong>Descrição:</strong> @Model.Descricao</p>
+            <p><strong>Data de Criação:</strong> @Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
+            <p><strong>Data encontrado:</strong> @(Model.DataEncontrado.HasValue ? Model.DataEncontrado.Value.ToString("dd/MM/yyyy HH:mm") : "Ainda não encontrado")</p>
+            <p>
+                <strong>Status:</strong>
+                <span class="badge @(Model.Status == RecupereJa.Enums.ItemStatusEnum.Encontrado ? "bg-success" : "bg-danger")">
+                    @(Model.Status == RecupereJa.Enums.ItemStatusEnum.Encontrado ? "Encontrado (com dono)" : "Perdido")
+                </span>
+            </p>
+            <p><strong>Aprovado:</strong> @(Model.Aprovado ? "✅ Sim" : "⏳ Pendente")</p>
+            <p><strong>Usuário que cadastrou:</strong> @Model.UsuarioNome</p>
         </div>
-    }
 
-    <p><strong>Descrição:</strong> @Model.Descricao</p>
-  
-    <p><strong>Data de Criação:</strong> @Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
-    <p>
-        <strong>Data encontrado:</strong>
-        @(Model.DataEncontrado.HasValue ? Model.DataEncontrado.Value.ToString("dd/MM/yyyy HH:mm") : "Ainda não encontrado")
-    </p>
-    <p>
-        <strong>Status:</strong>
-        <span class="badge @(Model.Status == RecupereJa.Enums.ItemStatusEnum.Encontrado ? "bg-success" : "bg-danger")">
-            @(Model.Status == RecupereJa.Enums.ItemStatusEnum.Encontrado ? "Encontrado (com dono)" : "Perdido")
-        </span>
-    </p>
-    <p><strong>Aprovado:</strong> @(Model.Aprovado ? "✅ Sim" : "⏳ Pendente")</p>
-    <p><strong>Usuário que cadastrou:</strong> @Model.UsuarioNome</p>
-</div>
+        <div class="mt-3">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+            <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+        </div>
+    </main>
 
-<div class="mt-3">
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
-    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
-</div>
+    <footer>
+        © 2025 Recupere Já - Todos os direitos reservados
+    </footer>
+</body>
+</html>
