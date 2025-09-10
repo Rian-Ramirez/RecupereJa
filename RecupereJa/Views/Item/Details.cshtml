@@ -6,15 +6,34 @@
 
 <h2>Detalhes do Item</h2>
 
-<div>
-    <h4>@Model.Titulo</h4>
+<div class="card shadow p-4">
+    <h4 class="card-title">@Model.Titulo</h4>
+
+    @if (!string.IsNullOrEmpty(Model.ImagemUrl))
+    {
+        <div class="mb-3">
+            <img src="@Model.ImagemUrl" alt="Imagem do item" class="img-fluid rounded" style="max-width:300px;" />
+        </div>
+    }
+
     <p><strong>Descrição:</strong> @Model.Descricao</p>
-    <p><strong>Data encontrado:</strong> @Model.DataEncontrado?.ToString("dd/MM/yyyy HH:mm")</p>
+  
+    <p><strong>Data de Criação:</strong> @Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
+    <p>
+        <strong>Data encontrado:</strong>
+        @(Model.DataEncontrado.HasValue ? Model.DataEncontrado.Value.ToString("dd/MM/yyyy HH:mm") : "Ainda não encontrado")
+    </p>
     <p>
         <strong>Status:</strong>
-        @(Model.Status == RecupereJa.Enums.ItemStatusEnum.Encontrado ? "Com dono" : "Perdido")
+        <span class="badge @(Model.Status == RecupereJa.Enums.ItemStatusEnum.Encontrado ? "bg-success" : "bg-danger")">
+            @(Model.Status == RecupereJa.Enums.ItemStatusEnum.Encontrado ? "Encontrado (com dono)" : "Perdido")
+        </span>
     </p>
+    <p><strong>Aprovado:</strong> @(Model.Aprovado ? "✅ Sim" : "⏳ Pendente")</p>
+    <p><strong>Usuário que cadastrou:</strong> @Model.UsuarioNome</p>
 </div>
 
-<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
-<a asp-action="Index" class="btn btn-secondary">Voltar</a>
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>

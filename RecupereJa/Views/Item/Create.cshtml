@@ -32,10 +32,10 @@
         <span asp-validation-for="Status" class="text-danger"></span>
     </div>
 
-    <!-- ✅ Campo de upload da imagem -->
+    <!-- Upload da imagem -->
     <div class="form-group">
         <label for="imagem" class="control-label">Imagem</label>
-        <input type="file" name="imagem" class="form-control" />
+        <input type="file" name="imagem" class="form-control" accept="image/*" />
     </div>
 
     <button type="submit" class="btn btn-primary">Salvar</button>

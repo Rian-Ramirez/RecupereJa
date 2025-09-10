@@ -2,9 +2,8 @@
 
 @{
     ViewData["Title"] = "Registrar";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
 }
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -23,15 +22,14 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        /* Fundo com degradê azul + blur */
         .background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom right, #d0eaff, #0077cc); /* degrade azul */
-            filter: blur(10px); /* aplica desfoque no fundo */
+            background: linear-gradient(to bottom right, #d0eaff, #0077cc);
+            filter: blur(10px);
             z-index: -1;
         }
 
@@ -44,7 +42,7 @@
         }
 
         .container {
-            background-color: white; /* sem transparência */
+            background-color: white;
             padding: 30px 25px;
             border-radius: 12px;
             max-width: 600px;
@@ -58,7 +56,7 @@
             padding: 10px;
             text-align: center;
             border-radius: 8px;
-            font-size: 30px; /* fonte menor */
+            font-size: 30px;
             margin-bottom: 25px;
         }
 
@@ -102,74 +100,68 @@
     </style>
 </head>
 <body>
-    <script>
-        const btnCadastrar = document.getElementById("btnCadastrar");
+    <div class="wrapper">
+        <div class="container">
+            <header>
+                <h2>Criar Conta</h2>
+            </header>
 
-        btnCadastrar.addEventListener("click", () => {
-          alert("Você concluiu seu cadastro");
+            <!-- Exibir erros de validação -->
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <form method="post" asp-controller="Usuario" asp-action="Registrar" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label">Nome</label>
+                    <input class="form-control" asp-for="Nome" required />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" asp-for="Email" type="email" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Identificador</label>
+                    <input class="form-control" asp-for="Identificador" required />
+                    <span asp-validation-for="Identificador" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Telefone</label>
+                    <input class="form-control" asp-for="Telefone" type="tel" required />
+                    <span asp-validation-for="Telefone" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Senha</label>
+                    <input class="form-control" asp-for="Senha" type="password" required />
+                    <span asp-validation-for="Senha" class="text-danger"></span>
+                </div>
+
+                <!-- Upload da foto -->
+                <div class="mb-3">
+                    <label class="form-label">Foto de Perfil</label>
+                    <input class="form-control" type="file" name="foto" accept="image/*" />
+                </div>
+
+                <button id="btnCadastrar" class="btn btn-success w-100" type="submit">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const btnCadastrar = document.getElementById("btnCadastrar");
+            if (btnCadastrar) {
+                btnCadastrar.addEventListener("click", () => {
+                    alert("Você concluiu seu cadastro!");
+                });
+            }
         });
     </script>
 </body>
 </html>
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <h3 class="mb-3">Criar conta</h3>
-        <form method="post" asp-controller="Usuario" asp-action="Registrar">
-            @Html.AntiForgeryToken()
-            <div class="mb-3">
-                <label class="form-label">Nome</label>
-                <input class="form-control" asp-for="Nome" required />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input class="form-control" asp-for="Email" type="email" required />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Identificador</label>
-                <input class="form-control" asp-for="Identificador" required />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Senha</label>
-                <input class="form-control" asp-for="Senha" type="password" required />
-            </div>
-            <button class="btn btn-success w-100" type="submit">Registrar</button>
-        </form>
-    </div>
-</div>
-
-
-@*<div class="register-container">
-	<h2 class="form-title">Registro de Usuário</h2>
-
-	@if (TempData["Sucesso"] != null)
-	{
-		<div class="alert alert-success text-center">
-			@TempData["Sucesso"]
-		</div>
-	}
-
-	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-	<form asp-action="Registrar" asp-controller="Usuario" method="post">
-
-		<div class="mb-3">
-			@Html.LabelFor(m => m.Nome, new { @class = "form-label" })
-			@Html.TextBoxFor(m => m.Nome, new { placeholder = "Digite seu nome", @class = "form-control" })
-			@Html.ValidationMessageFor(m => m.Nome, "", new { @class = "text-danger" })
-		</div>
-
-		<div class="mb-3">
-			@Html.LabelFor(m => m.Email, new { @class = "form-label" })
-			@Html.TextBoxFor(m => m.Email, new { placeholder = "Digite seu email", @class = "form-control" })
-			@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-		</div>
-
-		<div class="mb-4">
-			@Html.LabelFor(m => m.Senha, new { @class = "form-label" })
-			@Html.PasswordFor(m => m.Senha, new { placeholder = "Digite uma senha segura", @class = "form-control" })
-			@Html.ValidationMessageFor(m => m.Senha, "", new { @class = "text-danger" })
-		</div>
-
-		<button type="submit" class="btn btn-primary w-100">Registrar</button>
-	</form>
-
-</div> *@

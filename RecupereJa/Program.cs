@@ -18,7 +18,6 @@ builder.Services.AddScoped<IItemRepositorio, ItemRepositorio>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(o =>
     {

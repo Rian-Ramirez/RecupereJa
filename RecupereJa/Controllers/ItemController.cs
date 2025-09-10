@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecupereJa.Data;
 using RecupereJa.Enums;
@@ -7,6 +8,7 @@ using RecupereJa.Repository;
 using RecupereJa.Services;
 using RecupereJa.ViewModel;
 using RecupereJa.Filtros;
+
 
 namespace RecupereJa.Controllers
 {
@@ -41,7 +43,6 @@ namespace RecupereJa.Controllers
         }
 
         // GET: Item/Details/5
-        [IsAdm]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -52,7 +53,8 @@ namespace RecupereJa.Controllers
 
             if (item == null) return NotFound();
 
-            return View(ItemViewModel.FromItem(item));
+            var vm = ItemViewModel.FromItem(item);
+            return View(vm);
         }
 
         // GET: Item/Create
@@ -84,6 +86,7 @@ namespace RecupereJa.Controllers
 
                     var fileName = $"{Guid.NewGuid()}{Path.GetExtension(imagem.FileName)}";
                     var filePath = Path.Combine(imagesPath, fileName);
+
 
                     // 🔎 Log para debug
                     Console.WriteLine($"Tentando salvar em: {filePath}");
@@ -137,7 +140,9 @@ namespace RecupereJa.Controllers
             item.Status = vm.Status;
             item.DataEncontrado = vm.DataEncontrado;
 
+
             // Se enviou nova imagem, substitui
+
             if (imagem != null && imagem.Length > 0)
             {
                 try
@@ -151,6 +156,17 @@ namespace RecupereJa.Controllers
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await imagem.CopyToAsync(stream);
+                    }
+
+
+                    // opcional: remove a imagem antiga do disco, se existir
+                    if (!string.IsNullOrWhiteSpace(item.ImagemUrl))
+                    {
+                        var oldPath = Path.Combine(_env.WebRootPath ?? "wwwroot", item.ImagemUrl.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+                        if (System.IO.File.Exists(oldPath))
+                        {
+                            try { System.IO.File.Delete(oldPath); } catch { /* ignora erros de deleção */ }
+                        }
                     }
 
                     item.ImagemUrl = $"/Images/{fileName}";
@@ -187,6 +203,16 @@ namespace RecupereJa.Controllers
             var item = await _itemRepositorio.BuscarPorIdAsync(id);
             if (item != null)
             {
+                // opcional: remover imagem do disco ao excluir o item
+                if (!string.IsNullOrWhiteSpace(item.ImagemUrl))
+                {
+                    var imgPath = Path.Combine(_env.WebRootPath ?? "wwwroot", item.ImagemUrl.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+                    if (System.IO.File.Exists(imgPath))
+                    {
+                        try { System.IO.File.Delete(imgPath); } catch { /* ignora erros */ }
+                    }
+                }
+
                 await _itemRepositorio.DeletarAsync(id);
                 TempData["Sucesso"] = "Item removido com sucesso!";
             }

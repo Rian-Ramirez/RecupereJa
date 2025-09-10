@@ -7,8 +7,8 @@ namespace RecupereJa.Repositorio
 {
     public interface IUsuarioRepositorio : ICRUD<Usuario>
     {
-        Task<Usuario?> BuscarPorEmailSenhaAsync(string email, string senhaHashOuTexto);
-
-        Task<Usuario?> BuscarPorIdentificadorSenhaAsync(string identificador, string senhaHashOuTexto);
+        // Busca usuário apenas pelo email ou identificador
+        Task<Usuario?> BuscarPorEmailAsync(string email);
+        Task<Usuario?> BuscarPorIdentificadorAsync(string identificador);
     }
 }
